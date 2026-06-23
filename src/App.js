@@ -354,32 +354,33 @@ function SessionConfig({onStart,onBack}){
     });
   };
 
-  const sel={...inputStyle};
+  const sel={...inputStyle,color:C.text,background:"#1A1A1A"};
   const inp={...inputStyle};
   const lbl=labelStyle;
 
   return (
-    <div style={{minHeight:"100vh",background:"linear-gradient(145deg,#1E1B4B 0%,#4C1D95 45%,#0E7490 100%)",fontFamily:FF,display:"flex",flexDirection:"column",position:"relative",overflow:"hidden"}}>
-      <div style={{position:"absolute",width:400,height:400,borderRadius:"50%",top:"-10%",left:"-10%",background:"rgba(124,58,237,0.2)",filter:"blur(80px)",pointerEvents:"none"}}/>
-      <div style={{position:"absolute",width:350,height:350,borderRadius:"50%",bottom:"-5%",right:"-5%",background:"rgba(6,182,212,0.15)",filter:"blur(70px)",pointerEvents:"none"}}/>
+    <div style={{minHeight:"100vh",background:C.bg,fontFamily:FF,display:"flex",flexDirection:"column",position:"relative",overflow:"hidden"}}>
+      <div style={{position:"absolute",top:"20%",left:"50%",transform:"translateX(-50%)",width:500,height:500,borderRadius:"50%",background:"radial-gradient(circle,rgba(255,136,0,0.06) 0%,transparent 70%)",pointerEvents:"none"}}/>
 
       {/* Header */}
-      <div style={{padding:"20px 24px",position:"relative",zIndex:1}}>
-        <button onClick={onBack} style={{background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:8,color:"rgba(255,255,255,0.7)",padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:FF}}>← Accueil</button>
-        <div style={{fontWeight:900,fontSize:22,color:"#0A0A0A",marginTop:12,letterSpacing:-0.5}}>🎯 Nouvelle Session</div>
-        <div style={{color:"rgba(255,255,255,0.5)",fontSize:13,marginTop:4}}>Démarre le {startTime}</div>
+      <div style={{padding:"20px 24px",position:"relative",zIndex:1,display:"flex",alignItems:"center",gap:12}}>
+        <button onClick={onBack} style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:8,color:C.textMid,padding:"8px 14px",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:FF}}>← Accueil</button>
+        <div>
+          <div style={{fontWeight:900,fontSize:20,color:C.text,letterSpacing:-0.5}}>Nouvelle Session</div>
+          <div style={{color:C.textDim,fontSize:12,marginTop:2}}>{startTime}</div>
+        </div>
       </div>
 
       {/* Form card */}
       <div style={{flex:1,padding:"0 16px 40px",position:"relative",zIndex:1,display:"flex",alignItems:"flex-start",justifyContent:"center"}}>
-        <div style={{background:"rgba(255,255,255,0.97)",borderRadius:20,padding:24,width:"100%",maxWidth:440,boxShadow:"0 24px 60px rgba(0,0,0,0.3)"}}>
+        <div style={{background:C.bgCard,borderRadius:20,padding:24,width:"100%",maxWidth:440,border:"1px solid rgba(255,255,255,0.06)",boxShadow:"0 24px 60px rgba(0,0,0,0.5)"}}>
 
           {/* Type toggle */}
           <div style={{marginBottom:22}}>
             <label style={lbl}>Type de session</label>
-            <div style={{display:"flex",background:"#1A1A1A",borderRadius:12,padding:4}}>
+            <div style={{display:"flex",background:"rgba(255,255,255,0.04)",borderRadius:12,padding:4}}>
               {[["tournoi","🏆 Tournoi"],["cash","💵 Cash Game"]].map(([v,l])=>(
-                <button key={v} onClick={()=>setType(v)} style={{flex:1,padding:"10px 0",borderRadius:9,background:type===v?"linear-gradient(135deg,#7C3AED,#06B6D4)":"transparent",border:"none",color:type===v?"#fff":C.muted,fontWeight:800,fontSize:14,cursor:"pointer",fontFamily:FF,transition:"all .15s"}}>{l}</button>
+                <button key={v} onClick={()=>setType(v)} style={{flex:1,padding:"10px 0",borderRadius:9,background:type===v?C.grad:"transparent",border:"none",color:type===v?"#0A0A0A":C.textMid,fontWeight:800,fontSize:14,cursor:"pointer",fontFamily:FF,transition:"all .15s"}}>{l}</button>
               ))}
             </div>
           </div>
@@ -472,7 +473,7 @@ function SessionConfig({onStart,onBack}){
           <div style={{marginBottom:16}}>
             <button onClick={()=>setShowTableSetup(v=>!v)} style={{
               width:"100%",padding:"11px 0",
-              background:showTableSetup?C.lavender:"#F5F3FF",
+              background:showTableSetup?"rgba(255,136,0,0.1)":"rgba(255,255,255,0.05)",
               border:`1.5px solid ${tableSeats.some(s=>s.name)?C.primary:C.border}`,
               borderRadius:10,color:C.primary,fontSize:13,fontWeight:700,
               cursor:"pointer",fontFamily:FF,
@@ -502,7 +503,7 @@ function SessionConfig({onStart,onBack}){
                     <div key={i} style={{background:seat.isMe?C.lavender:"#fff",border:`1px solid ${seat.isMe?C.primary:C.border}`,borderRadius:10,padding:"8px 10px"}}>
                       <div style={{display:"flex",alignItems:"flex-end",gap:6,flexWrap:"wrap"}}>
                         <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:seat.isMe?0:0}}>
-                          <div style={{width:22,height:22,borderRadius:"50%",background:seat.isMe?"linear-gradient(135deg,#7C3AED,#06B6D4)":"#E5E7EB",display:"flex",alignItems:"center",justifyContent:"center",color:seat.isMe?"#fff":C.muted,fontSize:10,fontWeight:800,flexShrink:0}}>{i+1}</div>
+                          <div style={{width:22,height:22,borderRadius:"50%",background:seat.isMe?C.grad:"#E5E7EB",display:"flex",alignItems:"center",justifyContent:"center",color:seat.isMe?"#fff":C.muted,fontSize:10,fontWeight:800,flexShrink:0}}>{i+1}</div>
                         </div>
                         {seat.isMe
                           ?<span style={{fontWeight:800,color:C.primary,fontSize:12}}>Moi</span>
@@ -537,7 +538,7 @@ function SessionConfig({onStart,onBack}){
             })()}
           </div>
 
-          <button onClick={handleStart} disabled={!canStart} style={{width:"100%",padding:"14px 0",background:canStart?"linear-gradient(135deg,#7C3AED,#06B6D4)":"#E5E7EB",border:"none",borderRadius:12,color:canStart?"#fff":"#9CA3AF",fontSize:16,fontWeight:800,cursor:canStart?"pointer":"not-allowed",fontFamily:FF,boxShadow:canStart?"0 6px 20px rgba(124,58,237,0.4)":"none",transition:"all .2s"}}>
+          <button onClick={handleStart} disabled={!canStart} style={{width:"100%",padding:"14px 0",background:canStart?C.grad:"rgba(255,255,255,0.1)",border:"none",borderRadius:12,color:canStart?"#0A0A0A":"rgba(255,255,255,0.3)",fontSize:16,fontWeight:800,cursor:canStart?"pointer":"not-allowed",fontFamily:FF,transition:"all .2s"}}>
             Démarrer la session 🚀
           </button>
         </div>
@@ -630,7 +631,7 @@ function Sparkline({hands,width=300,height=80}){
 // ── StatBox ───────────────────────────────────────────────────
 function StatBox({label,value,color}){
   return (
-    <div style={{flex:1,background:"#1A1A1A",borderRadius:12,padding:"12px 16px",border:"1px solid rgba(255,255,255,0.08)",minWidth:0}}>
+    <div style={{flex:1,background:"#111",borderRadius:12,padding:"12px 16px",border:"1px solid rgba(255,255,255,0.08)",minWidth:0}}>
       <div style={{fontSize:10,color:C.textMid,fontWeight:600,textTransform:"uppercase",letterSpacing:.8,marginBottom:4}}>{label}</div>
       <div style={{fontSize:20,fontWeight:800,color:color||C.navy,fontVariantNumeric:"tabular-nums"}}>{value}</div>
     </div>
@@ -748,7 +749,7 @@ function HandForm({onSave,sessionName,sessionType,defaultSb="",defaultBb="",defa
   );
 
   return (
-    <div style={{background:C.bgCard,borderRadius:16,padding:20,border:"1px solid rgba(255,255,255,0.08)",boxShadow:"0 4px 24px rgba(124,58,237,0.07)",display:"flex",flexDirection:"column",gap:20}}>
+    <div style={{background:"#111",borderRadius:16,padding:20,border:"1px solid rgba(255,255,255,0.08)",boxShadow:"0 4px 24px rgba(124,58,237,0.07)",display:"flex",flexDirection:"column",gap:20}}>
 
       {/* ── Mes cartes ── */}
       <div>
@@ -866,7 +867,7 @@ function HandForm({onSave,sessionName,sessionType,defaultSb="",defaultBb="",defa
         <textarea value={note} onChange={e=>setNote(e.target.value)} placeholder="Décris la main, tes reads, ce que tu aurais dû faire…" rows={2} style={{...inp,resize:"vertical"}}/>
       </div>
 
-      <button onClick={save} disabled={!canSave} style={{width:"100%",padding:"13px 0",background:canSave?"linear-gradient(135deg,#7C3AED,#06B6D4)":"#F3F4F6",border:"none",borderRadius:10,color:canSave?"#fff":"#9CA3AF",fontSize:15,fontWeight:700,cursor:canSave?"pointer":"not-allowed",fontFamily:FF,boxShadow:canSave?"0 4px 18px rgba(124,58,237,0.3)":"none",transition:"all .2s"}}>
+      <button onClick={save} disabled={!canSave} style={{width:"100%",padding:"13px 0",background:canSave?C.grad:"#F3F4F6",border:"none",borderRadius:10,color:canSave?"#fff":"#9CA3AF",fontSize:15,fontWeight:700,cursor:canSave?"pointer":"not-allowed",fontFamily:FF,boxShadow:canSave?"0 4px 18px rgba(124,58,237,0.3)":"none",transition:"all .2s"}}>
         Enregistrer la main
       </button>
     </div>
@@ -885,7 +886,7 @@ function HandCard({hand,onShare,onEdit}){
   const rb=won?"#F0FDF4":lost?"#FEF2F2":"#F9FAFB";
   const villains=hand.villains||[];
   return (
-    <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:"12px 14px",boxShadow:"0 2px 10px rgba(124,58,237,0.05)",borderLeft:`4px solid ${rc}`}}>
+    <div style={{background:"#111",border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:"12px 14px",boxShadow:"0 2px 10px rgba(124,58,237,0.05)",borderLeft:f"4px solid {rc}"}}>
       <div style={{display:"flex",alignItems:"flex-start",gap:10,flexWrap:"wrap"}}>
         {/* Hero */}
         <div style={{display:"flex",flexDirection:"column",gap:3,flexShrink:0}}>
@@ -909,7 +910,7 @@ function HandCard({hand,onShare,onEdit}){
         <div style={{flex:1,minWidth:0}}>
           <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:3}}>
             {hand.finalStreet&&<Tag color="#E0F2FE" text="#0369A1">{hand.finalStreet}</Tag>}
-            {hand.action&&<Tag color="#F3E8FF" text="#7C3AED">{hand.action}</Tag>}
+            {hand.action&&<Tag color="#F3E8FF" text=C.orange>{hand.action}</Tag>}
             {hand.nbPlayers&&<Tag color="#FEF3C7" text="#92400E">{hand.nbPlayers}P</Tag>}
             {(()=>{
               const r=parseInt(hand.remaining)||0;
@@ -1219,7 +1220,7 @@ function ShareStudio({hand,session,onClose,initialMode="hand"}){
     const botY=tcy+try_+260;
 
     // Street + Action tags
-    const tags=[[hand.finalStreet,"#7C3AED"],[hand.action,"#0369A1"]].filter(([v])=>v);
+    const tags=[[hand.finalStreet,C.orange],[hand.action,"#0369A1"]].filter(([v])=>v);
     if(tags.length){
       let tx=W/2-(tags.length-1)*120;
       tags.forEach(([label,color])=>{
@@ -1424,8 +1425,8 @@ function ShareStudio({hand,session,onClose,initialMode="hand"}){
 
         {/* Mode toggle */}
         <div style={{display:"flex",background:"#1A1A1A",borderRadius:10,padding:4,marginBottom:14,gap:0}}>
-          <button onClick={()=>setMode("hand")} style={{flex:1,padding:"8px 0",borderRadius:8,border:"none",background:mode==="hand"?"linear-gradient(135deg,#7C3AED,#06B6D4)":"transparent",color:mode==="hand"?"#fff":C.muted,fontWeight:700,fontSize:13,cursor:"pointer",fontFamily:FF}}>🃏 Main</button>
-          <button onClick={()=>setMode("table")} disabled={!hasTable} style={{flex:1,padding:"8px 0",borderRadius:8,border:"none",background:mode==="table"?"linear-gradient(135deg,#7C3AED,#06B6D4)":"transparent",color:mode==="table"?"#fff":!hasTable?"#D1D5DB":C.muted,fontWeight:700,fontSize:13,cursor:hasTable?"pointer":"not-allowed",fontFamily:FF}}>🪑 Ma Table{!hasTable?" (vide)":""}</button>
+          <button onClick={()=>setMode("hand")} style={{flex:1,padding:"8px 0",borderRadius:8,border:"none",background:mode==="hand"?C.grad:"transparent",color:mode==="hand"?"#fff":C.muted,fontWeight:700,fontSize:13,cursor:"pointer",fontFamily:FF}}>🃏 Main</button>
+          <button onClick={()=>setMode("table")} disabled={!hasTable} style={{flex:1,padding:"8px 0",borderRadius:8,border:"none",background:mode==="table"?C.grad:"transparent",color:mode==="table"?"#fff":!hasTable?"#D1D5DB":C.muted,fontWeight:700,fontSize:13,cursor:hasTable?"pointer":"not-allowed",fontFamily:FF}}>🪑 Ma Table{!hasTable?" (vide)":""}</button>
         </div>
 
         {/* Dealer selector for table mode */}
@@ -1509,7 +1510,7 @@ function TableModal({session,onUpdate,onClose}){
                 {[2,6,7,8,9,10].map(n=>(
                   <button key={n} onClick={()=>handlePpt(n)} style={{
                     width:28,height:28,borderRadius:6,border:"none",cursor:"pointer",
-                    background:ppt===n?"linear-gradient(135deg,#7C3AED,#06B6D4)":"#F5F3FF",
+                    background:ppt===n?C.grad:"#F5F3FF",
                     color:ppt===n?"#fff":C.muted,fontWeight:700,fontSize:11,
                     fontFamily:FF
                   }}>{n}</button>
@@ -1529,7 +1530,7 @@ function TableModal({session,onUpdate,onClose}){
               {Array.from({length:nbSeats},(_,i)=>(
                 <button key={i} onClick={()=>setMySeat(i)} style={{
                   width:32,height:32,borderRadius:"50%",border:"none",cursor:"pointer",
-                  background:mySeat===i?"linear-gradient(135deg,#7C3AED,#06B6D4)":"rgba(255,255,255,0.7)",
+                  background:mySeat===i?C.grad:"rgba(255,255,255,0.7)",
                   color:mySeat===i?"#fff":C.muted,fontWeight:800,fontSize:12,
                   fontFamily:FF,
                   boxShadow:mySeat===i?"0 2px 8px rgba(124,58,237,0.4)":"none"
@@ -1551,7 +1552,7 @@ function TableModal({session,onUpdate,onClose}){
                 <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:isMe?0:6}}>
                   <div style={{
                     width:26,height:26,borderRadius:"50%",flexShrink:0,
-                    background:isMe?"linear-gradient(135deg,#7C3AED,#06B6D4)":"#E5E7EB",
+                    background:isMe?C.grad:"#E5E7EB",
                     display:"flex",alignItems:"center",justifyContent:"center",
                     color:isMe?"#fff":C.muted,fontSize:11,fontWeight:800
                   }}>{i+1}</div>
@@ -1735,7 +1736,7 @@ function StatsScreen({sessions,sessionBankroll,onBack}){
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.text,fontFamily:F}}>
       {/* Header */}
-      <div style={{background:"#0E0E0E",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+      <div style={{background:"#0E0E0E",borderBottom:"1px solid rgba(255,255,255,0.06)",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
         <div style={{maxWidth:700,margin:"0 auto"}}>
           <button onClick={onBack} style={{background:"rgba(255,255,255,0.15)",border:"none",borderRadius:8,color:"#0A0A0A",padding:"4px 10px",cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:F,marginBottom:6}}>← Accueil</button>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
@@ -1756,7 +1757,7 @@ function StatsScreen({sessions,sessionBankroll,onBack}){
       <div style={{maxWidth:700,margin:"0 auto",padding:"16px 14px 40px",display:"flex",flexDirection:"column",gap:16}}>
 
         {sessions.length===0?(
-          <div style={{background:C.bgCard,border:`2px dashed ${C.border}`,borderRadius:16,padding:48,textAlign:"center"}}>
+          <div style={{background:"#111",border:"2px dashed rgba(255,255,255,0.08)",borderRadius:16,padding:48,textAlign:"center"}}>
             <div style={{fontSize:48,marginBottom:12}}>📊</div>
             <div style={{color:C.textMid,fontSize:15}}>Joue ta première session pour voir tes stats !</div>
           </div>
@@ -2354,7 +2355,7 @@ export default function App(){
 
   if(screen==="session") return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.text,fontFamily:FF}}>
-      <div style={{background:"#0E0E0E",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+      <div style={{background:"#0E0E0E",borderBottom:"1px solid rgba(255,255,255,0.06)",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
         <div style={{maxWidth:680,margin:"0 auto"}}>
           <button onClick={()=>setScreen("home")} style={{background:"rgba(255,255,255,0.15)",border:"none",borderRadius:8,color:"#0A0A0A",padding:"4px 10px",cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:FF,marginBottom:6}}>← Accueil</button>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
@@ -2398,7 +2399,7 @@ export default function App(){
         {tab==="history"&&<StatsBar hands={hands}/>}
         {/* Courbe de session — cash game uniquement */}
         {tab==="history"&&activeSession?.type==="cash"&&hands.length>=2&&(
-          <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:16,marginBottom:14}}>
+          <div style={{background:"#111",border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:16,marginBottom:14}}>
             <div style={{fontSize:12,color:C.textMid,fontWeight:600,marginBottom:8}}>Courbe de session</div>
             <Sparkline hands={hands} width={Math.min(600,window.innerWidth-60)} height={80}/>
           </div>
@@ -2425,7 +2426,7 @@ export default function App(){
           const ratio=lastAvg?Math.round((lastStack/lastAvg)*100):null;
 
           return (
-            <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:16,marginBottom:14}}>
+            <div style={{background:"#111",border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:16,marginBottom:14}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}}>
                 <div style={{fontSize:12,color:C.textMid,fontWeight:600}}>🏔 Évolution du Stack</div>
                 {ratio!=null&&(
@@ -2457,7 +2458,7 @@ export default function App(){
         })()}
         {tab==="add"&&!activeSession?.closed&&<HandForm onSave={addHand} sessionName={activeSession?.name} sessionType={activeSession?.type} defaultSb={activeSession?.currentSb||""} defaultBb={activeSession?.currentBb||""} defaultAnte={activeSession?.currentAnte||activeSession?.currentBb||""} defaultStack={activeSession?.currentStack||hands[0]?.stackAfter||activeSession?.startingStack||""} defaultRemaining={activeSession?.remaining||""} defaultPaidPlaces={activeSession?.paidPlaces||""}/>}
         {tab==="add"&&activeSession?.closed&&(
-          <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:32,textAlign:"center"}}>
+          <div style={{background:"#111",border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:32,textAlign:"center"}}>
             <div style={{fontSize:32,marginBottom:8}}>✓</div>
             <div style={{color:C.textMid,fontSize:14}}>Cette session est terminée.</div>
           </div>
@@ -2465,7 +2466,7 @@ export default function App(){
         {tab==="history"&&(
           <div style={{display:"flex",flexDirection:"column",gap:8}}>
             {hands.length===0?(
-              <div style={{background:C.bgCard,border:`2px dashed ${C.border}`,borderRadius:14,padding:40,textAlign:"center"}}>
+              <div style={{background:"#111",border:"2px dashed rgba(255,255,255,0.08)",borderRadius:14,padding:40,textAlign:"center"}}>
                 <div style={{fontSize:40,marginBottom:8}}>🃏</div>
                 <div style={{color:C.textMid,fontSize:14,marginBottom:12}}>Aucune main pour l'instant</div>
                 <button onClick={()=>setTab("add")} style={{background:C.grad,border:"none",borderRadius:8,color:"#0A0A0A",padding:"10px 24px",cursor:"pointer",fontWeight:700,fontFamily:FF}}>Saisir ma première main</button>
@@ -2484,7 +2485,7 @@ export default function App(){
 
   if(screen==="history") return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.text,fontFamily:FF}}>
-      <div style={{background:"#0E0E0E",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+      <div style={{background:"#0E0E0E",borderBottom:"1px solid rgba(255,255,255,0.06)",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
         <div style={{maxWidth:680,margin:"0 auto"}}>
           <button onClick={()=>setScreen("home")} style={{background:"rgba(255,255,255,0.15)",border:"none",borderRadius:8,color:"#0A0A0A",padding:"4px 10px",cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:FF,marginBottom:6}}>← Accueil</button>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
@@ -2505,7 +2506,7 @@ export default function App(){
       </div>
       <div style={{maxWidth:680,margin:"0 auto",padding:"16px 14px 40px"}}>
         {sessions.length===0?(
-          <div style={{background:C.bgCard,border:`2px dashed ${C.border}`,borderRadius:16,padding:48,textAlign:"center"}}>
+          <div style={{background:"#111",border:"2px dashed rgba(255,255,255,0.08)",borderRadius:16,padding:48,textAlign:"center"}}>
             <div style={{fontSize:48,marginBottom:12}}>📭</div>
             <div style={{color:C.textMid,fontSize:15,marginBottom:16}}>Aucune session enregistrée</div>
             <button onClick={()=>setScreen("config")} style={{background:C.grad,border:"none",borderRadius:10,color:"#0A0A0A",padding:"12px 28px",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FF}}>Démarrer ma première session</button>
@@ -2517,7 +2518,7 @@ export default function App(){
               const br=sessionBankroll(s);
               const brWon=br!=null&&br>0, brLost=br!=null&&br<0;
               return (
-                <div key={s.id} style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,boxShadow:"0 2px 10px rgba(124,58,237,0.05)",borderLeft:`4px solid ${brWon?C.win:brLost?C.loss:C.muted}`,overflow:"hidden"}}>
+                <div key={s.id} style={{background:"#111",border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,boxShadow:"0 2px 10px rgba(124,58,237,0.05)",borderLeft:`4px solid ${brWon?C.win:brLost?C.loss:C.muted}`,overflow:"hidden"}}>
                   <button onClick={()=>{setActiveSessionId(s.id);setTab("history");setScreen("session");}} style={{width:"100%",padding:"14px 16px",cursor:"pointer",textAlign:"left",background:"transparent",border:"none",fontFamily:FF,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
