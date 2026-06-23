@@ -377,7 +377,7 @@ function SessionConfig({onStart,onBack}){
           {/* Type toggle */}
           <div style={{marginBottom:22}}>
             <label style={lbl}>Type de session</label>
-            <div style={{display:"flex",background:C.lavender,borderRadius:12,padding:4}}>
+            <div style={{display:"flex",background:"#1A1A1A",borderRadius:12,padding:4}}>
               {[["tournoi","🏆 Tournoi"],["cash","💵 Cash Game"]].map(([v,l])=>(
                 <button key={v} onClick={()=>setType(v)} style={{flex:1,padding:"10px 0",borderRadius:9,background:type===v?"linear-gradient(135deg,#7C3AED,#06B6D4)":"transparent",border:"none",color:type===v?"#fff":C.muted,fontWeight:800,fontSize:14,cursor:"pointer",fontFamily:FF,transition:"all .15s"}}>{l}</button>
               ))}
@@ -391,11 +391,11 @@ function SessionConfig({onStart,onBack}){
           </div>
 
           {/* Date/heure (readonly) */}
-          <div style={{marginBottom:20,background:C.lavender,borderRadius:10,padding:"10px 14px",display:"flex",alignItems:"center",gap:10}}>
+          <div style={{marginBottom:20,background:"#1A1A1A",borderRadius:10,padding:"10px 14px",display:"flex",alignItems:"center",gap:10}}>
             <span style={{fontSize:18}}>🕐</span>
             <div>
-              <div style={{fontSize:10,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:.8}}>Heure de début</div>
-              <div style={{fontWeight:800,color:C.navy,fontSize:14}}>{startTime}</div>
+              <div style={{fontSize:10,color:C.textMid,fontWeight:700,textTransform:"uppercase",letterSpacing:.8}}>Heure de début</div>
+              <div style={{fontWeight:800,color:C.text,fontSize:14}}>{startTime}</div>
             </div>
           </div>
 
@@ -497,7 +497,7 @@ function SessionConfig({onStart,onBack}){
                 return next;
               });
               return (
-                <div style={{background:C.bgElevated,border:`1px solid ${C.border}`,borderRadius:12,padding:12,marginTop:8,display:"flex",flexDirection:"column",gap:8}}>
+                <div style={{background:C.bgElevated,border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,padding:12,marginTop:8,display:"flex",flexDirection:"column",gap:8}}>
                   {seats.map((seat,i)=>(
                     <div key={i} style={{background:seat.isMe?C.lavender:"#fff",border:`1px solid ${seat.isMe?C.primary:C.border}`,borderRadius:10,padding:"8px 10px"}}>
                       <div style={{display:"flex",alignItems:"flex-end",gap:6,flexWrap:"wrap"}}>
@@ -511,14 +511,14 @@ function SessionConfig({onStart,onBack}){
                               placeholder={`Siège ${i+1} — Pseudo`}
                               style={{...inputStyle,padding:"6px 8px",fontSize:11,flex:1,minWidth:80}}/>
                             <div style={{display:"flex",flexDirection:"column",gap:1}}>
-                              <span style={{fontSize:9,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Pays</span>
+                              <span style={{fontSize:9,color:C.textMid,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Pays</span>
                               <select value={seat.nationality||"—"} onChange={e=>updateSeat(i,"nationality",e.target.value)}
                                 style={{...inputStyle,padding:"6px 6px",fontSize:10,width:110}}>
                                 {NATIONALITIES.map(n=><option key={n}>{n}</option>)}
                               </select>
                             </div>
                             <div style={{display:"flex",flexDirection:"column",gap:1}}>
-                              <span style={{fontSize:9,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Style</span>
+                              <span style={{fontSize:9,color:C.textMid,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Style</span>
                               <select value={seat.type} onChange={e=>updateSeat(i,"type",e.target.value)}
                                 style={{...inputStyle,padding:"6px 6px",fontSize:10,width:90,color:seat.type==="—"?C.muted:C.navy}}>
                                 {PLAYER_TYPES.map(t=><option key={t}>{t}</option>)}
@@ -549,7 +549,7 @@ function SessionConfig({onStart,onBack}){
 // ── MiniCard ──────────────────────────────────────────────────
 function MiniCard({card,size="md"}){
   const dims=size==="sm"?{w:28,h:38,fs:10,sf:12}:{w:38,h:52,fs:13,sf:16};
-  if(!card) return <div style={{width:dims.w,height:dims.h,borderRadius:6,background:"#F5F3FF",border:"2px dashed #C4B5FD",display:"flex",alignItems:"center",justifyContent:"center",color:"#C4B5FD",fontSize:dims.sf}}>?</div>;
+  if(!card) return <div style={{width:dims.w,height:dims.h,borderRadius:6,background:"#1A1A1A",border:"2px dashed #C4B5FD",display:"flex",alignItems:"center",justifyContent:"center",color:"#C4B5FD",fontSize:dims.sf}}>?</div>;
   return (
     <div style={{width:dims.w,height:dims.h,borderRadius:6,background:C.bgCard,border:"1.5px solid #E5E7EB",boxShadow:"0 2px 8px rgba(0,0,0,0.10)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",color:suitColor(card[1]),fontWeight:800,gap:1,userSelect:"none"}}>
       <span style={{fontSize:dims.fs,lineHeight:1}}>{card[0]}</span>
@@ -593,7 +593,7 @@ function CardPicker({value,onChange,label,usedCards=[]}){
               })}
             </div>
           ))}
-          {value&&<button onClick={()=>{onChange(null);setOpen(false);}} style={{marginTop:6,width:"100%",background:"#FEF2F2",border:"1px solid #FECACA",color:C.loss,borderRadius:6,padding:"4px 0",cursor:"pointer",fontSize:11,fontWeight:600}}>Effacer</button>}
+          {value&&<button onClick={()=>{onChange(null);setOpen(false);}} style={{marginTop:6,width:"100%",background:"rgba(255,61,61,0.1)",border:"1px solid #FECACA",color:C.loss,borderRadius:6,padding:"4px 0",cursor:"pointer",fontSize:11,fontWeight:600}}>Effacer</button>}
         </div>
       )}
     </div>
@@ -630,8 +630,8 @@ function Sparkline({hands,width=300,height=80}){
 // ── StatBox ───────────────────────────────────────────────────
 function StatBox({label,value,color}){
   return (
-    <div style={{flex:1,background:C.bgCard,borderRadius:12,padding:"12px 16px",border:`1.5px solid ${C.border}`,minWidth:0}}>
-      <div style={{fontSize:10,color:C.muted,fontWeight:600,textTransform:"uppercase",letterSpacing:.8,marginBottom:4}}>{label}</div>
+    <div style={{flex:1,background:"#1A1A1A",borderRadius:12,padding:"12px 16px",border:"1px solid rgba(255,255,255,0.08)",minWidth:0}}>
+      <div style={{fontSize:10,color:C.textMid,fontWeight:600,textTransform:"uppercase",letterSpacing:.8,marginBottom:4}}>{label}</div>
       <div style={{fontSize:20,fontWeight:800,color:color||C.navy,fontVariantNumeric:"tabular-nums"}}>{value}</div>
     </div>
   );
@@ -729,7 +729,7 @@ function HandForm({onSave,sessionName,sessionType,defaultSb="",defaultBb="",defa
   const SectionTitle=({emoji,title})=>(
     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12,paddingBottom:8,borderBottom:`1.5px solid ${C.border}`}}>
       <span style={{fontSize:16}}>{emoji}</span>
-      <span style={{fontWeight:800,fontSize:13,color:C.navy,letterSpacing:.3}}>{title}</span>
+      <span style={{fontWeight:800,fontSize:13,color:C.text,letterSpacing:.3}}>{title}</span>
     </div>
   );
 
@@ -737,7 +737,7 @@ function HandForm({onSave,sessionName,sessionType,defaultSb="",defaultBb="",defa
   const PosSelect=({value,onChange,exclude=[],label,color=C.primary})=>(
     <div>
       <label style={lbl}>{label}</label>
-      <select value={value} onChange={e=>onChange(e.target.value)} style={{...inp,borderColor:value?color:C.border,color:value?color:C.muted,fontWeight:value?700:400}}>
+      <select value={value} onChange={e=>onChange(e.target.value)} style={{...inp,borderColor:value?color:C.border,color:value?color:C.textMid,fontWeight:value?700:400}}>
         <option value="">— Position —</option>
         {POSITIONS.map(p=>{
           const blocked=exclude.includes(p)&&p!==value;
@@ -748,7 +748,7 @@ function HandForm({onSave,sessionName,sessionType,defaultSb="",defaultBb="",defa
   );
 
   return (
-    <div style={{background:C.bgCard,borderRadius:16,padding:20,border:`1.5px solid ${C.border}`,boxShadow:"0 4px 24px rgba(124,58,237,0.07)",display:"flex",flexDirection:"column",gap:20}}>
+    <div style={{background:C.bgCard,borderRadius:16,padding:20,border:"1px solid rgba(255,255,255,0.08)",boxShadow:"0 4px 24px rgba(124,58,237,0.07)",display:"flex",flexDirection:"column",gap:20}}>
 
       {/* ── Mes cartes ── */}
       <div>
@@ -774,7 +774,7 @@ function HandForm({onSave,sessionName,sessionType,defaultSb="",defaultBb="",defa
         <SectionTitle emoji="👤" title={`Adversaire${nbPlayers>2?"s":""} (optionnel)`}/>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
           {villains.map((v,i)=>(
-            <div key={i} style={{background:"#F8F7FF",borderRadius:12,padding:12,border:`1px solid ${C.border}`}}>
+            <div key={i} style={{background:"#F8F7FF",borderRadius:12,padding:12,border:"1px solid rgba(255,255,255,0.08)"}}>
               <div style={{fontSize:11,color:"#0369A1",fontWeight:800,marginBottom:8,textTransform:"uppercase",letterSpacing:.5}}>Villain {nbPlayers>2?i+1:""}</div>
               <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:10}}>
                 <CardPicker value={v.cards[0]} onChange={val=>updateVillainCard(i,0,val)} label="V1" usedCards={usedCards}/>
@@ -793,7 +793,7 @@ function HandForm({onSave,sessionName,sessionType,defaultSb="",defaultBb="",defa
         <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
           {["F1","F2","F3","Turn","River"].map((l,i)=>(
             <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-              <span style={{fontSize:9,color:C.muted,fontWeight:600}}>{l}</span>
+              <span style={{fontSize:9,color:C.textMid,fontWeight:600}}>{l}</span>
               <CardPicker value={board[i]} onChange={v=>updateBoard(i,v)} label={l} usedCards={usedCards}/>
             </div>
           ))}
@@ -885,7 +885,7 @@ function HandCard({hand,onShare,onEdit}){
   const rb=won?"#F0FDF4":lost?"#FEF2F2":"#F9FAFB";
   const villains=hand.villains||[];
   return (
-    <div style={{background:C.bgCard,border:`1.5px solid ${C.border}`,borderRadius:14,padding:"12px 14px",boxShadow:"0 2px 10px rgba(124,58,237,0.05)",borderLeft:`4px solid ${rc}`}}>
+    <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:"12px 14px",boxShadow:"0 2px 10px rgba(124,58,237,0.05)",borderLeft:`4px solid ${rc}`}}>
       <div style={{display:"flex",alignItems:"flex-start",gap:10,flexWrap:"wrap"}}>
         {/* Hero */}
         <div style={{display:"flex",flexDirection:"column",gap:3,flexShrink:0}}>
@@ -902,7 +902,7 @@ function HandCard({hand,onShare,onEdit}){
         {/* Board */}
         {hand.board?.some(Boolean)&&(
           <div style={{display:"flex",flexDirection:"column",gap:3,flexShrink:0}}>
-            <div style={{fontSize:9,color:C.muted,fontWeight:700,textTransform:"uppercase"}}>Board</div>
+            <div style={{fontSize:9,color:C.textMid,fontWeight:700,textTransform:"uppercase"}}>Board</div>
             <div style={{display:"flex",gap:3}}>{hand.board.filter(Boolean).map((c,i)=><MiniCard key={i} card={c} size="sm"/>)}</div>
           </div>
         )}
@@ -922,15 +922,15 @@ function HandCard({hand,onShare,onEdit}){
               return <Tag color="#F0FDF4" text="#166834">👥 {r} restants</Tag>;
             })()}
           </div>
-          {hand.note&&<div style={{color:C.muted,fontSize:11,fontStyle:"italic",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{hand.note}</div>}
+          {hand.note&&<div style={{color:C.textMid,fontSize:11,fontStyle:"italic",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{hand.note}</div>}
           <div style={{color:"#D1D5DB",fontSize:10,marginTop:3}}>{fmtDate(hand.ts)}</div>
         </div>
         <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6,flexShrink:0}}>
           <div style={{background:rb,borderRadius:10,padding:"6px 12px",color:rc,fontWeight:800,fontSize:16,fontVariantNumeric:"tabular-nums"}}>{fmtChips(hand.result)}</div>
-          {hand.stackAfter&&<div style={{fontSize:10,color:C.muted,fontWeight:600}}>Stack : {hand.stackAfter.toLocaleString()}</div>}
+          {hand.stackAfter&&<div style={{fontSize:10,color:C.textMid,fontWeight:600}}>Stack : {hand.stackAfter.toLocaleString()}</div>}
           <div style={{display:"flex",gap:5}}>
-            <button onClick={()=>onEdit&&onEdit(hand)} style={{background:"#F5F3FF",border:"none",borderRadius:8,padding:"5px 8px",color:C.primary,fontSize:11,cursor:"pointer",fontWeight:700}}>✏️</button>
-            <button onClick={()=>onShare(hand)} style={{background:C.lavender,border:"none",borderRadius:8,padding:"5px 8px",color:C.primary,fontSize:11,cursor:"pointer",fontWeight:700}}>📸</button>
+            <button onClick={()=>onEdit&&onEdit(hand)} style={{background:"#1A1A1A",border:"none",borderRadius:8,padding:"5px 8px",color:C.primary,fontSize:11,cursor:"pointer",fontWeight:700}}>✏️</button>
+            <button onClick={()=>onShare(hand)} style={{background:"#1A1A1A",border:"none",borderRadius:8,padding:"5px 8px",color:C.primary,fontSize:11,cursor:"pointer",fontWeight:700}}>📸</button>
           </div>
         </div>
       </div>
@@ -1418,12 +1418,12 @@ function ShareStudio({hand,session,onClose,initialMode="hand"}){
 
         {/* Header */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-          <h3 style={{margin:0,color:C.navy,fontSize:18,fontWeight:800}}>📸 Share Studio</h3>
-          <button onClick={onClose} style={{background:"#F5F3FF",border:"none",borderRadius:8,width:32,height:32,cursor:"pointer",color:C.primary,fontSize:16}}>×</button>
+          <h3 style={{margin:0,color:C.text,fontSize:18,fontWeight:800}}>📸 Share Studio</h3>
+          <button onClick={onClose} style={{background:"#1A1A1A",border:"none",borderRadius:8,width:32,height:32,cursor:"pointer",color:C.primary,fontSize:16}}>×</button>
         </div>
 
         {/* Mode toggle */}
-        <div style={{display:"flex",background:C.lavender,borderRadius:10,padding:4,marginBottom:14,gap:0}}>
+        <div style={{display:"flex",background:"#1A1A1A",borderRadius:10,padding:4,marginBottom:14,gap:0}}>
           <button onClick={()=>setMode("hand")} style={{flex:1,padding:"8px 0",borderRadius:8,border:"none",background:mode==="hand"?"linear-gradient(135deg,#7C3AED,#06B6D4)":"transparent",color:mode==="hand"?"#fff":C.muted,fontWeight:700,fontSize:13,cursor:"pointer",fontFamily:FF}}>🃏 Main</button>
           <button onClick={()=>setMode("table")} disabled={!hasTable} style={{flex:1,padding:"8px 0",borderRadius:8,border:"none",background:mode==="table"?"linear-gradient(135deg,#7C3AED,#06B6D4)":"transparent",color:mode==="table"?"#fff":!hasTable?"#D1D5DB":C.muted,fontWeight:700,fontSize:13,cursor:hasTable?"pointer":"not-allowed",fontFamily:FF}}>🪑 Ma Table{!hasTable?" (vide)":""}</button>
         </div>
@@ -1431,7 +1431,7 @@ function ShareStudio({hand,session,onClose,initialMode="hand"}){
         {/* Dealer selector for table mode */}
         {mode==="table"&&hasTable&&(
           <div style={{marginBottom:12}}>
-            <div style={{fontSize:10,color:C.muted,fontWeight:600,textTransform:"uppercase",letterSpacing:.8,marginBottom:6}}>Position du Dealer</div>
+            <div style={{fontSize:10,color:C.textMid,fontWeight:600,textTransform:"uppercase",letterSpacing:.8,marginBottom:6}}>Position du Dealer</div>
             <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
               {seats.map((s,i)=>(
                 <button key={i} onClick={()=>setDealerSeat(i)} style={{
@@ -1446,7 +1446,7 @@ function ShareStudio({hand,session,onClose,initialMode="hand"}){
         )}
 
         {/* Canvas preview — scaled 1080x1920 → fits modal */}
-        <div style={{borderRadius:12,overflow:"hidden",marginBottom:14,border:`1.5px solid ${C.border}`,background:"#0a0612"}}>
+        <div style={{borderRadius:12,overflow:"hidden",marginBottom:14,border:"1px solid rgba(255,255,255,0.08)",background:"#0a0612"}}>
           <canvas ref={previewRef} width={400} style={{width:"100%",display:"block"}}/>
         </div>
 
@@ -1501,10 +1501,10 @@ function TableModal({session,onUpdate,onClose}){
     <div style={{position:"fixed",inset:0,background:"rgba(30,27,75,0.65)",backdropFilter:"blur(8px)",zIndex:600,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px",overflowY:"auto"}}>
       <div style={{background:C.bgCard,borderRadius:20,padding:22,width:"100%",maxWidth:500,fontFamily:FF,boxShadow:"0 24px 60px rgba(0,0,0,0.3)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-          <div style={{fontWeight:900,fontSize:16,color:C.navy}}>🪑 Ma Table</div>
+          <div style={{fontWeight:900,fontSize:16,color:C.text}}>🪑 Ma Table</div>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
             <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:2}}>
-              <span style={{fontSize:9,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Joueurs / table</span>
+              <span style={{fontSize:9,color:C.textMid,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Joueurs / table</span>
               <div style={{display:"flex",gap:4}}>
                 {[2,6,7,8,9,10].map(n=>(
                   <button key={n} onClick={()=>handlePpt(n)} style={{
@@ -1516,12 +1516,12 @@ function TableModal({session,onUpdate,onClose}){
                 ))}
               </div>
             </div>
-            <button onClick={onClose} style={{background:"#F5F3FF",border:"none",borderRadius:8,width:30,height:30,cursor:"pointer",color:C.primary,fontSize:15}}>×</button>
+            <button onClick={onClose} style={{background:"#1A1A1A",border:"none",borderRadius:8,width:30,height:30,cursor:"pointer",color:C.primary,fontSize:15}}>×</button>
           </div>
         </div>
 
         {/* My seat selector */}
-        <div style={{background:C.lavender,borderRadius:12,padding:"10px 14px",marginBottom:14,display:"flex",alignItems:"center",gap:10}}>
+        <div style={{background:"#1A1A1A",borderRadius:12,padding:"10px 14px",marginBottom:14,display:"flex",alignItems:"center",gap:10}}>
           <span style={{fontSize:16}}>🙋</span>
           <div style={{flex:1}}>
             <div style={{fontSize:10,color:C.primary,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,marginBottom:4}}>Mon siège</div>
@@ -1562,14 +1562,14 @@ function TableModal({session,onUpdate,onClose}){
                         placeholder={`Siège ${i+1} — Pseudo`}
                         style={{...inp,flex:1,margin:0,alignSelf:"flex-end"}}/>
                       <div style={{display:"flex",flexDirection:"column",gap:2}}>
-                        <span style={{fontSize:9,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Pays</span>
+                        <span style={{fontSize:9,color:C.textMid,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Pays</span>
                         <select value={seat.nationality||"—"} onChange={e=>updateSeat(i,"nationality",e.target.value)}
                           style={{...inp,width:130,margin:0,fontSize:11}}>
                           {NATIONALITIES.map(n=><option key={n}>{n}</option>)}
                         </select>
                       </div>
                       <div style={{display:"flex",flexDirection:"column",gap:2}}>
-                        <span style={{fontSize:9,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Style</span>
+                        <span style={{fontSize:9,color:C.textMid,fontWeight:700,textTransform:"uppercase",letterSpacing:.5}}>Style</span>
                         <select value={seat.type} onChange={e=>updateSeat(i,"type",e.target.value)}
                           style={{...inp,width:110,margin:0,color:seat.type==="—"?C.muted:C.navy}}>
                           {PLAYER_TYPES.map(t=><option key={t}>{t}</option>)}
@@ -1581,7 +1581,7 @@ function TableModal({session,onUpdate,onClose}){
                 {!isMe&&(
                   <input value={seat.notes} onChange={e=>updateSeat(i,"notes",e.target.value)}
                     placeholder="Notes (ex: 3-bet light, call trop large…)"
-                    style={{...inp,width:"100%",boxSizing:"border-box",marginTop:4,fontSize:11,color:C.muted}}/>
+                    style={{...inp,width:"100%",boxSizing:"border-box",marginTop:4,fontSize:11,color:C.textMid}}/>
                 )}
               </div>
             );
@@ -1645,8 +1645,8 @@ function SessionInfoPanel({session,onUpdate}){
     <div style={{position:"fixed",inset:0,background:"rgba(30,27,75,0.55)",backdropFilter:"blur(6px)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 16px"}}>
       <div style={{background:C.bgCard,borderRadius:20,padding:24,width:"100%",maxWidth:380,boxShadow:"0 24px 60px rgba(0,0,0,0.3)",fontFamily:FF}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
-          <div style={{fontWeight:900,fontSize:16,color:C.navy}}>⚙️ Infos tournoi</div>
-          <button onClick={()=>setOpen(false)} style={{background:"#F5F3FF",border:"none",borderRadius:8,width:30,height:30,cursor:"pointer",color:C.primary,fontSize:15}}>×</button>
+          <div style={{fontWeight:900,fontSize:16,color:C.text}}>⚙️ Infos tournoi</div>
+          <button onClick={()=>setOpen(false)} style={{background:"#1A1A1A",border:"none",borderRadius:8,width:30,height:30,cursor:"pointer",color:C.primary,fontSize:15}}>×</button>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:10}}>
           <div><label style={lbl}>Petite blinde</label><input style={inp} type="number" value={sb} onChange={e=>{const v=e.target.value;setSb(v);const n=parseFloat(v);if(!isNaN(n)&&n>0){const bv=n*2;setBb(String(bv));setAnte(String(bv));}}}/></div>
@@ -1712,10 +1712,10 @@ function StatsScreen({sessions,sessionBankroll,onBack}){
   const worstSession=closed.length?Math.min(...closed.map(s=>sessionBankroll(s)||0)):0;
 
   const Card=({label,value,color,sub})=>(
-    <div style={{background:C.bgCard,borderRadius:14,padding:"14px 16px",border:`1.5px solid ${C.border}`,flex:1,minWidth:0}}>
-      <div style={{fontSize:10,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,marginBottom:4}}>{label}</div>
+    <div style={{background:C.bgCard,borderRadius:14,padding:"14px 16px",border:"1px solid rgba(255,255,255,0.08)",flex:1,minWidth:0}}>
+      <div style={{fontSize:10,color:C.textMid,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,marginBottom:4}}>{label}</div>
       <div style={{fontSize:22,fontWeight:900,color:color||C.navy,fontVariantNumeric:"tabular-nums"}}>{value}</div>
-      {sub&&<div style={{fontSize:10,color:C.muted,marginTop:2}}>{sub}</div>}
+      {sub&&<div style={{fontSize:10,color:C.textMid,marginTop:2}}>{sub}</div>}
     </div>
   );
 
@@ -1723,8 +1723,8 @@ function StatsScreen({sessions,sessionBankroll,onBack}){
     if(!active||!payload?.length) return null;
     const d=payload[0];
     return (
-      <div style={{background:C.bgCard,border:`1.5px solid ${C.border}`,borderRadius:10,padding:"8px 12px",boxShadow:"0 4px 20px rgba(0,0,0,0.12)",fontFamily:F}}>
-        <div style={{fontWeight:800,color:C.navy,fontSize:12,marginBottom:4}}>{label}</div>
+      <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:10,padding:"8px 12px",boxShadow:"0 4px 20px rgba(0,0,0,0.12)",fontFamily:F}}>
+        <div style={{fontWeight:800,color:C.text,fontSize:12,marginBottom:4}}>{label}</div>
         {payload.map((p,i)=>(
           <div key={i} style={{fontSize:12,color:p.color,fontWeight:700}}>{p.name} : {p.value>0?"+":""}{p.value?.toLocaleString("fr-FR")} €</div>
         ))}
@@ -1735,7 +1735,7 @@ function StatsScreen({sessions,sessionBankroll,onBack}){
   return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.text,fontFamily:F}}>
       {/* Header */}
-      <div style={{background:"linear-gradient(90deg,#1A1A1A 0%,#111 100%)",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+      <div style={{background:"#0E0E0E",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
         <div style={{maxWidth:700,margin:"0 auto"}}>
           <button onClick={onBack} style={{background:"rgba(255,255,255,0.15)",border:"none",borderRadius:8,color:"#0A0A0A",padding:"4px 10px",cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:F,marginBottom:6}}>← Accueil</button>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
@@ -1758,7 +1758,7 @@ function StatsScreen({sessions,sessionBankroll,onBack}){
         {sessions.length===0?(
           <div style={{background:C.bgCard,border:`2px dashed ${C.border}`,borderRadius:16,padding:48,textAlign:"center"}}>
             <div style={{fontSize:48,marginBottom:12}}>📊</div>
-            <div style={{color:C.muted,fontSize:15}}>Joue ta première session pour voir tes stats !</div>
+            <div style={{color:C.textMid,fontSize:15}}>Joue ta première session pour voir tes stats !</div>
           </div>
         ):<>
 
@@ -1772,8 +1772,8 @@ function StatsScreen({sessions,sessionBankroll,onBack}){
 
         {/* Courbe bankroll cumulative */}
         {bankrollCurve.length>=2&&(
-          <div style={{background:C.bgCard,border:`1.5px solid ${C.border}`,borderRadius:16,padding:20}}>
-            <div style={{fontWeight:800,color:C.navy,fontSize:14,marginBottom:16}}>📈 Courbe Bankroll</div>
+          <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:16,padding:20}}>
+            <div style={{fontWeight:800,color:C.text,fontSize:14,marginBottom:16}}>📈 Courbe Bankroll</div>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={bankrollCurve} margin={{top:5,right:10,left:0,bottom:5}}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E0D9FF" vertical={false}/>
@@ -1789,8 +1789,8 @@ function StatsScreen({sessions,sessionBankroll,onBack}){
 
         {/* Bar chart par session */}
         {sessionBars.length>=1&&(
-          <div style={{background:C.bgCard,border:`1.5px solid ${C.border}`,borderRadius:16,padding:20}}>
-            <div style={{fontWeight:800,color:C.navy,fontSize:14,marginBottom:16}}>🎯 Gain / Perte par Session</div>
+          <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:16,padding:20}}>
+            <div style={{fontWeight:800,color:C.text,fontSize:14,marginBottom:16}}>🎯 Gain / Perte par Session</div>
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={sessionBars} margin={{top:5,right:10,left:0,bottom:5}}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E0D9FF" vertical={false}/>
@@ -1819,19 +1819,19 @@ function StatsScreen({sessions,sessionBankroll,onBack}){
           const posData=Object.values(posByPos).sort((a,b)=>b.hands-a.hands);
           if(posData.length<2) return null;
           return (
-            <div style={{background:C.bgCard,border:`1.5px solid ${C.border}`,borderRadius:16,padding:20}}>
-              <div style={{fontWeight:800,color:C.navy,fontSize:14,marginBottom:14}}>🎴 Stats par Position</div>
+            <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:16,padding:20}}>
+              <div style={{fontWeight:800,color:C.text,fontSize:14,marginBottom:14}}>🎴 Stats par Position</div>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {posData.map(p=>{
                   const wr=Math.round(p.wins/p.hands*100);
                   return (
                     <div key={p.pos} style={{display:"flex",alignItems:"center",gap:10}}>
                       <div style={{width:44,fontWeight:800,fontSize:12,color:C.primary}}>{p.pos}</div>
-                      <div style={{flex:1,background:"#F5F3FF",borderRadius:6,height:8,overflow:"hidden"}}>
+                      <div style={{flex:1,background:"#1A1A1A",borderRadius:6,height:8,overflow:"hidden"}}>
                         <div style={{width:`${wr}%`,height:"100%",background:`linear-gradient(90deg,${C.primary},${C.cyan})`,borderRadius:6,transition:"width .5s"}}/>
                       </div>
                       <div style={{width:36,fontSize:11,fontWeight:700,color:wr>=50?C.win:C.loss,textAlign:"right"}}>{wr}%</div>
-                      <div style={{width:50,fontSize:11,color:C.muted,textAlign:"right"}}>{p.hands}m</div>
+                      <div style={{width:50,fontSize:11,color:C.textMid,textAlign:"right"}}>{p.hands}m</div>
                       <div style={{width:60,fontSize:11,fontWeight:700,color:p.total>0?C.win:C.loss,textAlign:"right"}}>{fmtChips(p.total)}</div>
                     </div>
                   );
@@ -1856,8 +1856,8 @@ function SessionOptionsModal({session,onRename,onDelete,onClose}){
     <div style={{position:"fixed",inset:0,background:"rgba(30,27,75,0.65)",backdropFilter:"blur(8px)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px"}}>
       <div style={{background:C.bgCard,borderRadius:20,padding:24,width:"100%",maxWidth:380,fontFamily:FF,boxShadow:"0 24px 60px rgba(0,0,0,0.3)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
-          <div style={{fontWeight:900,fontSize:16,color:C.navy}}>⚙️ Options de session</div>
-          <button onClick={onClose} style={{background:"#F5F3FF",border:"none",borderRadius:8,width:30,height:30,cursor:"pointer",color:C.primary,fontSize:15}}>×</button>
+          <div style={{fontWeight:900,fontSize:16,color:C.text}}>⚙️ Options de session</div>
+          <button onClick={onClose} style={{background:"#1A1A1A",border:"none",borderRadius:8,width:30,height:30,cursor:"pointer",color:C.primary,fontSize:15}}>×</button>
         </div>
 
         {/* Rename */}
@@ -1882,19 +1882,19 @@ function SessionOptionsModal({session,onRename,onDelete,onClose}){
         {/* Delete */}
         {!confirmDelete?(
           <button onClick={()=>setConfirmDelete(true)} style={{
-            width:"100%",padding:"11px 0",background:"#FEF2F2",
+            width:"100%",padding:"11px 0",background:"rgba(255,61,61,0.1)",
             border:`1.5px solid #FECACA`,borderRadius:10,
             color:C.loss,fontSize:14,fontWeight:700,cursor:"pointer",
             fontFamily:FF,
             display:"flex",alignItems:"center",justifyContent:"center",gap:8
           }}>🗑 Supprimer cette session</button>
         ):(
-          <div style={{background:"#FEF2F2",borderRadius:12,padding:14,textAlign:"center"}}>
+          <div style={{background:"rgba(255,61,61,0.1)",borderRadius:12,padding:14,textAlign:"center"}}>
             <div style={{color:C.loss,fontWeight:700,fontSize:14,marginBottom:12}}>
               Supprimer "{session.name}" et ses {session.hands.length} mains ?
             </div>
             <div style={{display:"flex",gap:8}}>
-              <button onClick={()=>setConfirmDelete(false)} style={{flex:1,padding:"10px 0",background:"#F5F3FF",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontWeight:700,fontFamily:FF}}>Annuler</button>
+              <button onClick={()=>setConfirmDelete(false)} style={{flex:1,padding:"10px 0",background:"#1A1A1A",border:"1px solid rgba(255,255,255,0.08)",borderRadius:8,color:C.textMid,cursor:"pointer",fontWeight:700,fontFamily:FF}}>Annuler</button>
               <button onClick={()=>{onDelete();onClose();}} style={{flex:1,padding:"10px 0",background:C.loss,border:"none",borderRadius:8,color:"#0A0A0A",cursor:"pointer",fontWeight:800,fontFamily:FF}}>Confirmer</button>
             </div>
           </div>
@@ -1931,12 +1931,12 @@ function EndSessionModal({session,hands,onConfirm,onCancel}){
       <div style={{background:C.bgCard,borderRadius:24,padding:28,width:"100%",maxWidth:400,fontFamily:FF,boxShadow:"0 32px 80px rgba(0,0,0,0.3)"}}>
         <div style={{textAlign:"center",marginBottom:20}}>
           <div style={{fontSize:48,marginBottom:8}}>{itm?"🏆":won?"😊":lost?"😔":"🤝"}</div>
-          <div style={{fontWeight:900,fontSize:22,color:C.navy}}>Fin de session</div>
-          <div style={{color:C.muted,fontSize:13,marginTop:4}}>{session.name}</div>
+          <div style={{fontWeight:900,fontSize:22,color:C.text}}>Fin de session</div>
+          <div style={{color:C.textMid,fontSize:13,marginTop:4}}>{session.name}</div>
         </div>
 
         {/* Résumé stats */}
-        <div style={{background:C.lavender,borderRadius:16,padding:16,marginBottom:16}}>
+        <div style={{background:"#1A1A1A",borderRadius:16,padding:16,marginBottom:16}}>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
             {[
               ["Mains jouées",hands.length,C.navy],
@@ -1945,7 +1945,7 @@ function EndSessionModal({session,hands,onConfirm,onCancel}){
               ...(lastStack?[["Stack final",lastStack.toLocaleString(),C.primary]]:[]),
             ].map(([l,v,color],i)=>(
               <div key={i} style={{background:C.bgCard,borderRadius:10,padding:"10px 12px"}}>
-                <div style={{fontSize:10,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:.7}}>{l}</div>
+                <div style={{fontSize:10,color:C.textMid,fontWeight:700,textTransform:"uppercase",letterSpacing:.7}}>{l}</div>
                 <div style={{fontWeight:800,fontSize:17,color,marginTop:3}}>{v}</div>
               </div>
             ))}
@@ -1982,7 +1982,7 @@ function EndSessionModal({session,hands,onConfirm,onCancel}){
               </div>
               <div>
                 <div style={{fontWeight:800,fontSize:14,color:itm?C.win:C.navy}}>Dans les places payées (ITM)</div>
-                <div style={{fontSize:11,color:C.muted,marginTop:2}}>In The Money — tu as été payé !</div>
+                <div style={{fontSize:11,color:C.textMid,marginTop:2}}>In The Money — tu as été payé !</div>
               </div>
             </button>
 
@@ -2015,7 +2015,7 @@ function EndSessionModal({session,hands,onConfirm,onCancel}){
         </div>
 
         <div style={{display:"flex",gap:10}}>
-          <button onClick={onCancel} style={{flex:1,padding:"12px 0",background:"#F5F3FF",border:`1.5px solid ${C.border}`,borderRadius:10,color:C.muted,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FF}}>
+          <button onClick={onCancel} style={{flex:1,padding:"12px 0",background:"#1A1A1A",border:"1px solid rgba(255,255,255,0.08)",borderRadius:10,color:C.textMid,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:FF}}>
             Continuer
           </button>
           <button onClick={()=>onConfirm({
@@ -2049,15 +2049,15 @@ function EditHandModal({hand,onSave,onDelete,onClose}){
     <div style={{position:"fixed",inset:0,background:"rgba(30,27,75,0.65)",backdropFilter:"blur(8px)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 16px"}}>
       <div style={{background:C.bgCard,borderRadius:20,padding:24,width:"100%",maxWidth:400,fontFamily:FF,boxShadow:"0 24px 60px rgba(0,0,0,0.3)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
-          <div style={{fontWeight:900,fontSize:16,color:C.navy}}>✏️ Modifier la main</div>
-          <button onClick={onClose} style={{background:"#F5F3FF",border:"none",borderRadius:8,width:30,height:30,cursor:"pointer",color:C.primary,fontSize:15}}>×</button>
+          <div style={{fontWeight:900,fontSize:16,color:C.text}}>✏️ Modifier la main</div>
+          <button onClick={onClose} style={{background:"#1A1A1A",border:"none",borderRadius:8,width:30,height:30,cursor:"pointer",color:C.primary,fontSize:15}}>×</button>
         </div>
 
         {/* Cards preview */}
         <div style={{display:"flex",gap:6,marginBottom:16,alignItems:"center"}}>
           <MiniCard card={hand.card1}/><MiniCard card={hand.card2}/>
           {hand.board?.some(Boolean)&&<>
-            <span style={{color:C.muted,fontSize:12}}>|</span>
+            <span style={{color:C.textMid,fontSize:12}}>|</span>
             {hand.board.filter(Boolean).map((c,i)=><MiniCard key={i} card={c} size="sm"/>)}
           </>}
         </div>
@@ -2086,7 +2086,7 @@ function EditHandModal({hand,onSave,onDelete,onClose}){
 
         <div style={{display:"flex",gap:10}}>
           {!confirmDelete
-            ? <button onClick={()=>setConfirmDelete(true)} style={{padding:"11px 16px",background:"#FEF2F2",border:`1.5px solid #FECACA`,borderRadius:10,color:C.loss,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FF}}>🗑</button>
+            ? <button onClick={()=>setConfirmDelete(true)} style={{padding:"11px 16px",background:"rgba(255,61,61,0.1)",border:`1.5px solid #FECACA`,borderRadius:10,color:C.loss,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FF}}>🗑</button>
             : <button onClick={()=>onDelete(hand.id)} style={{padding:"11px 16px",background:C.loss,border:"none",borderRadius:10,color:"#0A0A0A",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:FF}}>Confirmer</button>
           }
           <button onClick={()=>onSave({...hand,result:parseFloat(gain)||0,stackAfter:parseFloat(stackAfter)||null,note,finalStreet,action})} style={{flex:1,padding:"11px 0",background:C.grad,border:"none",borderRadius:10,color:"#0A0A0A",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:FF,boxShadow:"0 4px 16px rgba(124,58,237,0.3)"}}>
@@ -2354,7 +2354,7 @@ export default function App(){
 
   if(screen==="session") return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.text,fontFamily:FF}}>
-      <div style={{background:"linear-gradient(90deg,#1A1A1A 0%,#111 100%)",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+      <div style={{background:"#0E0E0E",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
         <div style={{maxWidth:680,margin:"0 auto"}}>
           <button onClick={()=>setScreen("home")} style={{background:"rgba(255,255,255,0.15)",border:"none",borderRadius:8,color:"#0A0A0A",padding:"4px 10px",cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:FF,marginBottom:6}}>← Accueil</button>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
@@ -2390,7 +2390,7 @@ export default function App(){
         </div>
       </div>
       <div style={{maxWidth:680,margin:"0 auto",padding:"16px 14px 40px"}}>
-        <div style={{display:"flex",gap:0,marginBottom:14,background:C.bgCard,borderRadius:10,padding:4,border:`1.5px solid ${C.border}`}}>
+        <div style={{display:"flex",gap:0,marginBottom:14,background:C.bgCard,borderRadius:10,padding:4,border:"1px solid rgba(255,255,255,0.08)"}}>
           {[["add","✏️ Saisir"],["history","📋 Mains"]].map(([t,l])=>(
             <button key={t} onClick={()=>setTab(t)} style={{flex:1,padding:"8px 0",borderRadius:8,background:tab===t?C.grad:"transparent",color:tab===t?"#0A0A0A":C.textMid,border:"none",color:tab===t?"#fff":C.muted,cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:FF,transition:"all .15s"}}>{l}</button>
           ))}
@@ -2398,8 +2398,8 @@ export default function App(){
         {tab==="history"&&<StatsBar hands={hands}/>}
         {/* Courbe de session — cash game uniquement */}
         {tab==="history"&&activeSession?.type==="cash"&&hands.length>=2&&(
-          <div style={{background:C.bgCard,border:`1.5px solid ${C.border}`,borderRadius:14,padding:16,marginBottom:14}}>
-            <div style={{fontSize:12,color:C.muted,fontWeight:600,marginBottom:8}}>Courbe de session</div>
+          <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:16,marginBottom:14}}>
+            <div style={{fontSize:12,color:C.textMid,fontWeight:600,marginBottom:8}}>Courbe de session</div>
             <Sparkline hands={hands} width={Math.min(600,window.innerWidth-60)} height={80}/>
           </div>
         )}
@@ -2425,9 +2425,9 @@ export default function App(){
           const ratio=lastAvg?Math.round((lastStack/lastAvg)*100):null;
 
           return (
-            <div style={{background:C.bgCard,border:`1.5px solid ${C.border}`,borderRadius:14,padding:16,marginBottom:14}}>
+            <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:16,marginBottom:14}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}}>
-                <div style={{fontSize:12,color:C.muted,fontWeight:600}}>🏔 Évolution du Stack</div>
+                <div style={{fontSize:12,color:C.textMid,fontWeight:600}}>🏔 Évolution du Stack</div>
                 {ratio!=null&&(
                   <div style={{fontSize:11,fontWeight:800,color:ratio>=100?C.win:C.loss,background:ratio>=100?"#F0FDF4":"#FEF2F2",padding:"2px 8px",borderRadius:20}}>
                     {ratio>=100?"▲":"▼"} {ratio}% vs moy.
@@ -2445,8 +2445,8 @@ export default function App(){
                   <YAxis tick={{fontSize:9,fill:C.muted,fontFamily:FF}} axisLine={false} tickLine={false} tickFormatter={v=>v>=1000?`${(v/1000).toFixed(0)}k`:v} width={36}/>
                   <Tooltip
                     formatter={(v,n)=>[v?.toLocaleString(),n==="stack"?"Mon stack":"Stack moyen"]}
-                    labelStyle={{fontWeight:700,color:C.navy,fontFamily:FF}}
-                    contentStyle={{borderRadius:10,border:`1.5px solid ${C.border}`,fontFamily:FF,fontSize:12}}
+                    labelStyle={{fontWeight:700,color:C.text,fontFamily:FF}}
+                    contentStyle={{borderRadius:10,border:"1px solid rgba(255,255,255,0.08)",fontFamily:FF,fontSize:12}}
                   />
                   <Line type="monotone" dataKey="stack" name="stack" stroke={C.cyan} strokeWidth={2.5} dot={{fill:C.cyan,r:3}} activeDot={{r:5}}/>
                   {hasAvg&&<Line type="monotone" dataKey="avg" name="avg" stroke={C.gold} strokeWidth={1.5} strokeDasharray="5 3" dot={false} activeDot={{r:4,fill:C.gold}}/>}
@@ -2457,9 +2457,9 @@ export default function App(){
         })()}
         {tab==="add"&&!activeSession?.closed&&<HandForm onSave={addHand} sessionName={activeSession?.name} sessionType={activeSession?.type} defaultSb={activeSession?.currentSb||""} defaultBb={activeSession?.currentBb||""} defaultAnte={activeSession?.currentAnte||activeSession?.currentBb||""} defaultStack={activeSession?.currentStack||hands[0]?.stackAfter||activeSession?.startingStack||""} defaultRemaining={activeSession?.remaining||""} defaultPaidPlaces={activeSession?.paidPlaces||""}/>}
         {tab==="add"&&activeSession?.closed&&(
-          <div style={{background:C.bgCard,border:`1.5px solid ${C.border}`,borderRadius:14,padding:32,textAlign:"center"}}>
+          <div style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:32,textAlign:"center"}}>
             <div style={{fontSize:32,marginBottom:8}}>✓</div>
-            <div style={{color:C.muted,fontSize:14}}>Cette session est terminée.</div>
+            <div style={{color:C.textMid,fontSize:14}}>Cette session est terminée.</div>
           </div>
         )}
         {tab==="history"&&(
@@ -2467,7 +2467,7 @@ export default function App(){
             {hands.length===0?(
               <div style={{background:C.bgCard,border:`2px dashed ${C.border}`,borderRadius:14,padding:40,textAlign:"center"}}>
                 <div style={{fontSize:40,marginBottom:8}}>🃏</div>
-                <div style={{color:C.muted,fontSize:14,marginBottom:12}}>Aucune main pour l'instant</div>
+                <div style={{color:C.textMid,fontSize:14,marginBottom:12}}>Aucune main pour l'instant</div>
                 <button onClick={()=>setTab("add")} style={{background:C.grad,border:"none",borderRadius:8,color:"#0A0A0A",padding:"10px 24px",cursor:"pointer",fontWeight:700,fontFamily:FF}}>Saisir ma première main</button>
               </div>
             ):hands.map(h=><HandCard key={h.id} hand={h} onShare={setShareHand} onEdit={setEditHand}/>)}
@@ -2484,7 +2484,7 @@ export default function App(){
 
   if(screen==="history") return (
     <div style={{minHeight:"100vh",background:C.bg,color:C.text,fontFamily:FF}}>
-      <div style={{background:"linear-gradient(90deg,#1A1A1A 0%,#111 100%)",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+      <div style={{background:"#0E0E0E",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
         <div style={{maxWidth:680,margin:"0 auto"}}>
           <button onClick={()=>setScreen("home")} style={{background:"rgba(255,255,255,0.15)",border:"none",borderRadius:8,color:"#0A0A0A",padding:"4px 10px",cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:FF,marginBottom:6}}>← Accueil</button>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
@@ -2507,7 +2507,7 @@ export default function App(){
         {sessions.length===0?(
           <div style={{background:C.bgCard,border:`2px dashed ${C.border}`,borderRadius:16,padding:48,textAlign:"center"}}>
             <div style={{fontSize:48,marginBottom:12}}>📭</div>
-            <div style={{color:C.muted,fontSize:15,marginBottom:16}}>Aucune session enregistrée</div>
+            <div style={{color:C.textMid,fontSize:15,marginBottom:16}}>Aucune session enregistrée</div>
             <button onClick={()=>setScreen("config")} style={{background:C.grad,border:"none",borderRadius:10,color:"#0A0A0A",padding:"12px 28px",cursor:"pointer",fontWeight:800,fontSize:15,fontFamily:FF}}>Démarrer ma première session</button>
           </div>
         ):(
@@ -2517,20 +2517,20 @@ export default function App(){
               const br=sessionBankroll(s);
               const brWon=br!=null&&br>0, brLost=br!=null&&br<0;
               return (
-                <div key={s.id} style={{background:C.bgCard,border:`1.5px solid ${C.border}`,borderRadius:14,boxShadow:"0 2px 10px rgba(124,58,237,0.05)",borderLeft:`4px solid ${brWon?C.win:brLost?C.loss:C.muted}`,overflow:"hidden"}}>
+                <div key={s.id} style={{background:C.bgCard,border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,boxShadow:"0 2px 10px rgba(124,58,237,0.05)",borderLeft:`4px solid ${brWon?C.win:brLost?C.loss:C.muted}`,overflow:"hidden"}}>
                   <button onClick={()=>{setActiveSessionId(s.id);setTab("history");setScreen("session");}} style={{width:"100%",padding:"14px 16px",cursor:"pointer",textAlign:"left",background:"transparent",border:"none",fontFamily:FF,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
-                        <span style={{fontWeight:800,fontSize:15,color:C.navy}}>{s.name}</span>
-                        {s.closed&&<span style={{background:"#F0FDF4",color:C.win,fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:10,flexShrink:0}}>✓</span>}
+                        <span style={{fontWeight:800,fontSize:15,color:C.text}}>{s.name}</span>
+                        {s.closed&&<span style={{background:"rgba(0,230,118,0.1)",color:C.win,fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:10,flexShrink:0}}>✓</span>}
                       </div>
                       <div style={{display:"flex",gap:5,alignItems:"center",flexWrap:"wrap",marginBottom:3}}>
-                        <span style={{background:C.lavender,color:C.primary,fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:20}}>{s.type==="cash"?"💵 Cash":"🏆 Tournoi"}</span>
-                        {s.type==="tournoi"&&s.format&&<span style={{color:C.muted,fontSize:11}}>{s.format}</span>}
-                        {s.type==="tournoi"&&s.buyin&&<span style={{color:C.muted,fontSize:11}}>Buy-in : {s.buyin}{s.currency||"€"}</span>}
-                        {s.placement&&<span style={{color:C.muted,fontSize:11}}>#{s.placement}</span>}
-                        {s.itm&&<span style={{background:"#F0FDF4",color:C.win,fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:20}}>💰 ITM</span>}
-                        <span style={{color:C.muted,fontSize:11}}>{s.hands.length} mains</span>
+                        <span style={{background:"#1A1A1A",color:C.primary,fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:20}}>{s.type==="cash"?"💵 Cash":"🏆 Tournoi"}</span>
+                        {s.type==="tournoi"&&s.format&&<span style={{color:C.textMid,fontSize:11}}>{s.format}</span>}
+                        {s.type==="tournoi"&&s.buyin&&<span style={{color:C.textMid,fontSize:11}}>Buy-in : {s.buyin}{s.currency||"€"}</span>}
+                        {s.placement&&<span style={{color:C.textMid,fontSize:11}}>#{s.placement}</span>}
+                        {s.itm&&<span style={{background:"rgba(0,230,118,0.1)",color:C.win,fontSize:10,fontWeight:700,padding:"2px 7px",borderRadius:20}}>💰 ITM</span>}
+                        <span style={{color:C.textMid,fontSize:11}}>{s.hands.length} mains</span>
                       </div>
                       <div style={{color:"#D1D5DB",fontSize:10}}>{s.startTime}{s.endTime?` → ${s.endTime}`:""}</div>
                     </div>
@@ -2540,14 +2540,14 @@ export default function App(){
                           {br>0?"+":""}{br.toLocaleString("fr-FR")} €
                         </div>
                       ):(
-                        <div style={{fontWeight:700,fontSize:13,color:C.muted}}>En cours…</div>
+                        <div style={{fontWeight:700,fontSize:13,color:C.textMid}}>En cours…</div>
                       )}
-                      <div style={{fontSize:11,color:C.muted,fontWeight:600}}>{fmtChips(tot)} jetons</div>
+                      <div style={{fontSize:11,color:C.textMid,fontWeight:600}}>{fmtChips(tot)} jetons</div>
                     </div>
                   </button>
                   {/* Options bar */}
                   <div style={{borderTop:`1px solid ${C.border}`,padding:"6px 16px",display:"flex",gap:8,background:C.bgElevated}}>
-                    <button onClick={e=>{e.stopPropagation();setSessionOptions(s.id);}} style={{background:"none",border:"none",color:C.muted,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:FF,padding:"2px 6px",borderRadius:6,display:"flex",alignItems:"center",gap:4}}>✏️ Renommer / Supprimer</button>
+                    <button onClick={e=>{e.stopPropagation();setSessionOptions(s.id);}} style={{background:"none",border:"none",color:C.textMid,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:FF,padding:"2px 6px",borderRadius:6,display:"flex",alignItems:"center",gap:4}}>✏️ Renommer / Supprimer</button>
                   </div>
                 </div>
               );
