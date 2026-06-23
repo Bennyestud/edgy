@@ -2343,82 +2343,8 @@ export default function App(){
     setScreen("home");
   };
 
-  if(!user) return <LoginScreen onLogin={()=>loadSessions()}/>;;
+  if(!user) return <LoginScreen onLogin={()=>loadSessions()}/>;
 
-  // Bankroll réelle (argent) par session
-  const sessionBankroll=s=>{
-    if(!s.closed) return null; // session pas terminée = pas comptabilisée
-    if(s.type==="cash"){
-      // Cash : gain/perte direct en argent (on suppose 1 jeton = 1 unité monétaire)
-      return s.hands.reduce((a,h)=>a+h.result,0);
-    } else {
-      // Tournoi : ITM → gain net / pas ITM → -buy-in
-      if(s.itm && s.itmGain!=null) return s.itmGain - parseFloat(s.buyin||0);
-      if(s.closed) return -(parseFloat(s.buyin||0));
-      return null;
-    }
-  };
-
-  const grandBankroll=sessions.reduce((t,s)=>{ const b=sessionBankroll(s); return b!=null?t+b:t; },0);
-  const grandTotal=sessions.reduce((t,s)=>t+s.hands.reduce((a,h)=>a+h.result,0),0);
-  const totalHands=sessions.reduce((t,s)=>t+s.hands.length,0);
-  const activeSession=sessions.find(s=>s.id===activeSessionId);
-  const hands=activeSession?.hands||[];
-  const sessionTotal=hands.reduce((a,h)=>a+h.result,0);
-
-  const handleSessionStart=config=>{
-    setSessions(prev=>[...prev,config]);
-    setActiveSessionId(config.id);
-    setTab("add");
-    setScreen("session");
-  };
-
-  const addHand=hand=>{
-    setSessions(prev=>prev.map(s=>{
-      if(s.id!==activeSessionId) return s;
-      const updated={...s,hands:[hand,...s.hands]};
-      const sa=hand.stackAfter;
-      if(sa!==null&&sa!==undefined&&sa!=="") updated.currentStack=parseFloat(sa);
-      return updated;
-    }));
-    setTab("history");
-  };
-
-  const updateSession=fields=>{
-    setSessions(prev=>prev.map(s=>s.id===activeSessionId?{...s,...fields}:s));
-  };
-
-  const endSession=fields=>{
-    setSessions(prev=>prev.map(s=>s.id===activeSessionId?{...s,...fields}:s));
-    setShowEndSession(false);
-    setScreen("history");
-  };
-
-  const saveEditedHand=updated=>{
-    setSessions(prev=>prev.map(s=>{
-      if(s.id!==activeSessionId) return s;
-      const newHands=s.hands.map(h=>h.id===updated.id?updated:h);
-      const latest=newHands[0]; // most recent hand
-      const updatedSession={...s,hands:newHands};
-      if(latest?.stackAfter) updatedSession.currentStack=latest.stackAfter;
-      return updatedSession;
-    }));
-    setEditHand(null);
-  };
-
-  const deleteHand=handId=>{
-    setSessions(prev=>prev.map(s=>s.id===activeSessionId?{...s,hands:s.hands.filter(h=>h.id!==handId)}:s));
-    setEditHand(null);
-  };
-
-  const deleteSession=id=>{
-    setSessions(prev=>prev.filter(s=>s.id!==id));
-    if(activeSessionId===id) setActiveSessionId(null);
-  };
-
-  const renameSession=(id,name)=>{
-    setSessions(prev=>prev.map(s=>s.id===id?{...s,name}:s));
-  };
 
   if(screen==="home") return <HomeScreen user={user?.email?.split("@")[0]||"Joueur"} grandTotal={grandBankroll} totalHands={totalHands} onNewSession={()=>setScreen("config")} onHistory={()=>setScreen("history")} onStats={()=>setScreen("stats")} onLogout={handleLogout}/>;
 
