@@ -909,7 +909,7 @@ function HandCard({hand,onShare,onEdit}){
         <div style={{flex:1,minWidth:0}}>
           <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:3}}>
             {hand.finalStreet&&<Tag color="#E0F2FE" text="#0369A1">{hand.finalStreet}</Tag>}
-            {hand.action&&<Tag color="#F3E8FF" text=C.orange>{hand.action}</Tag>}
+            {hand.action&&<Tag color="#1A1A1A" text="#FF8800">{hand.action}</Tag>}
             {hand.nbPlayers&&<Tag color="#FEF3C7" text="#92400E">{hand.nbPlayers}P</Tag>}
             {(()=>{
               const r=parseInt(hand.remaining)||0;
