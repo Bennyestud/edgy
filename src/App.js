@@ -886,8 +886,7 @@ function HandCard({hand,onShare,onEdit}){
   const rb=won?"#F0FDF4":lost?"#FEF2F2":"#F9FAFB";
   const villains=hand.villains||[];
   return (
-    <div style={{background:"#111",border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:"12px 14px",boxShadow:"0 2px 10px rgba(124,58,237,0.05)",borderLeft:f"4px solid {rc}"}}>
-      <div style={{display:"flex",alignItems:"flex-start",gap:10,flexWrap:"wrap"}}>
+    <div style={{background:"#111",border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:"12px 14px",boxShadow:"0 2px 10px rgba(0,0,0,0.3)",borderLeft:`4px solid ${rc}`}}>      <div style={{display:"flex",alignItems:"flex-start",gap:10,flexWrap:"wrap"}}>
         {/* Hero */}
         <div style={{display:"flex",flexDirection:"column",gap:3,flexShrink:0}}>
           <div style={{fontSize:9,color:C.primary,fontWeight:700,textTransform:"uppercase"}}>Moi{hand.position?` · ${hand.position}`:""}</div>
