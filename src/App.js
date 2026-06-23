@@ -1,5 +1,11 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Cell } from "recharts";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.REACT_APP_SUPABASE_URL || "https://htgdxtiufksxoahyuief.supabase.co",
+  process.env.REACT_APP_SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0Z2R4dGl1ZmtzeG9haHl1aWVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMTE0ODIsImV4cCI6MjA5Nzc4NzQ4Mn0.zO6tD_LMZtQfQBbtqeISknFbXSZ1oYWWVpJmFSDQKLU"
+);
 
 // ── Fonts ──────────────────────────────────────────────────────
 const fontLink = document.createElement("link");
@@ -139,48 +145,50 @@ function EdgyIcon({size=40}){
 }
 function LoginScreen({onLogin}){
   const [mode,setMode]=useState("login");
-  const [username,setUsername]=useState("");
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const [confirmPw,setConfirmPw]=useState("");
   const [error,setError]=useState("");
   const [success,setSuccess]=useState("");
   const [shake,setShake]=useState(false);
-  const FAKE={benjamin:"poker",demo:"1234",pseudo:"testtest"};
+  const [loading,setLoading]=useState(false);
   const triggerShake=()=>{setShake(true);setTimeout(()=>setShake(false),500);};
-  const resetMode=m=>{setMode(m);setError("");setSuccess("");setUsername("");setEmail("");setPassword("");setConfirmPw("");};
-  const handleSubmit=()=>{
-    setError("");setSuccess("");
-    if(mode==="login"){
-      if(!username.trim()||!password.trim()){setError("Remplis tous les champs");triggerShake();return;}
-      if(FAKE[username.toLowerCase()]===password){onLogin(username);}
-      else{setError("Identifiants incorrects");triggerShake();}
-    }
-    if(mode==="signup"){
-      if(!username.trim()||!email.trim()||!password||!confirmPw){setError("Remplis tous les champs");triggerShake();return;}
-      if(!/\S+@\S+\.\S+/.test(email)){setError("Email invalide");triggerShake();return;}
-      if(password.length<6){setError("Mot de passe trop court (6 car. min)");triggerShake();return;}
-      if(password!==confirmPw){setError("Les mots de passe ne correspondent pas");triggerShake();return;}
-      onLogin(username);
-    }
-    if(mode==="forgot"){
-      if(!email.trim()||!/\S+@\S+\.\S+/.test(email)){setError("Email invalide");triggerShake();return;}
-      setSuccess("Lien envoyé à "+email+" ✉️");
-    }
+  const resetMode=m=>{setMode(m);setError("");setSuccess("");setEmail("");setPassword("");setConfirmPw("");};
+  const handleSubmit=async()=>{
+    setError("");setSuccess("");setLoading(true);
+    try{
+      if(mode==="login"){
+        if(!email.trim()||!password.trim()){setError("Remplis tous les champs");triggerShake();return;}
+        const {error:e}=await supabase.auth.signInWithPassword({email,password});
+        if(e){setError("Email ou mot de passe incorrect");triggerShake();}
+        else{onLogin();}
+      }
+      if(mode==="signup"){
+        if(!email.trim()||!password||!confirmPw){setError("Remplis tous les champs");triggerShake();return;}
+        if(!/\S+@\S+\.\S+/.test(email)){setError("Email invalide");triggerShake();return;}
+        if(password.length<6){setError("Mot de passe trop court (6 car. min)");triggerShake();return;}
+        if(password!==confirmPw){setError("Les mots de passe ne correspondent pas");triggerShake();return;}
+        const {error:e}=await supabase.auth.signUp({email,password});
+        if(e){setError(e.message);triggerShake();}
+        else{setSuccess("Compte créé ! Vérifie ton email pour confirmer.");}
+      }
+      if(mode==="forgot"){
+        if(!email.trim()||!/\S+@\S+\.\S+/.test(email)){setError("Email invalide");triggerShake();return;}
+        const {error:e}=await supabase.auth.resetPasswordForEmail(email);
+        if(e){setError(e.message);}
+        else{setSuccess("Lien envoyé à "+email+" ✉️");}
+      }
+    }finally{setLoading(false);}
   };
   const inp={...inputStyle};
   return (
     <div style={{minHeight:"100vh",fontFamily:FF,background:C.bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"24px",position:"relative",overflow:"hidden"}}>
       <style>{`@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}@keyframes fadeup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}`}</style>
       <div style={{position:"absolute",top:"-20%",left:"50%",transform:"translateX(-50%)",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(255,136,0,0.07) 0%,transparent 70%)",pointerEvents:"none"}}/>
-      <div style={{marginBottom:36,animation:"fadeup .5s ease"}}>
-        <EdgyLogo size={44}/>
-      </div>
+      <div style={{marginBottom:36,animation:"fadeup .5s ease"}}><EdgyLogo size={44}/></div>
       <div style={{width:"100%",maxWidth:380,background:C.bgCard,borderRadius:20,border:"1px solid rgba(255,255,255,0.06)",padding:"28px 24px",boxShadow:"0 32px 64px rgba(0,0,0,0.7)",animation:shake?"shake .4s ease":"fadeup .5s ease .1s both"}}>
         <div style={{marginBottom:22}}>
-          <div style={{fontWeight:800,fontSize:20,color:C.text,marginBottom:3}}>
-            {mode==="login"?"Content de te revoir 👋":mode==="signup"?"Crée ton compte":"Mot de passe oublié"}
-          </div>
+          <div style={{fontWeight:800,fontSize:20,color:C.text,marginBottom:3}}>{mode==="login"?"Content de te revoir 👋":mode==="signup"?"Crée ton compte":"Mot de passe oublié"}</div>
           {mode==="login"&&<div style={{fontSize:12,color:C.textDim}}>Connecte-toi pour accéder à tes sessions</div>}
         </div>
         {mode!=="forgot"&&(
@@ -193,12 +201,11 @@ function LoginScreen({onLogin}){
         {mode==="forgot"&&<button onClick={()=>resetMode("login")} style={{background:"none",border:"none",color:C.orange,fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:18,padding:0,fontFamily:FF}}>← Retour</button>}
         <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
           {mode==="login"&&<>
-            <input style={inp} value={username} onChange={e=>setUsername(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Pseudo"/>
+            <input style={inp} type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Email"/>
             <input style={inp} type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Mot de passe"/>
             <div style={{textAlign:"right",marginTop:2}}><button onClick={()=>resetMode("forgot")} style={{background:"none",border:"none",color:C.textDim,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FF}}>Mot de passe oublié ?</button></div>
           </>}
           {mode==="signup"&&<>
-            <input style={inp} value={username} onChange={e=>setUsername(e.target.value)} placeholder="Pseudo"/>
             <input style={inp} type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email"/>
             <input style={inp} type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Mot de passe (6 car. min)"/>
             <input style={inp} type="password" value={confirmPw} onChange={e=>setConfirmPw(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Confirmer le mot de passe"/>
@@ -207,16 +214,14 @@ function LoginScreen({onLogin}){
         </div>
         {error&&<div style={{background:"rgba(255,61,61,0.1)",border:"1px solid rgba(255,61,61,0.2)",borderRadius:8,padding:"10px 14px",color:"#FF6B6B",fontSize:13,fontWeight:600,marginBottom:14}}>{error}</div>}
         {success&&<div style={{background:"rgba(0,230,118,0.1)",border:"1px solid rgba(0,230,118,0.2)",borderRadius:8,padding:"10px 14px",color:C.win,fontSize:13,fontWeight:600,marginBottom:14}}>{success}</div>}
-        <button onClick={handleSubmit} style={{width:"100%",padding:"14px 0",background:C.grad,border:"none",borderRadius:10,color:"#0A0A0A",fontSize:15,fontWeight:800,cursor:"pointer",fontFamily:FF,letterSpacing:.3}}>
-          {mode==="login"?"Se connecter →":mode==="signup"?"Créer mon compte →":"Envoyer le lien →"}
+        <button onClick={handleSubmit} disabled={loading} style={{width:"100%",padding:"14px 0",background:loading?"rgba(255,136,0,0.5)":C.grad,border:"none",borderRadius:10,color:"#0A0A0A",fontSize:15,fontWeight:800,cursor:loading?"not-allowed":"pointer",fontFamily:FF,letterSpacing:.3}}>
+          {loading?"...":mode==="login"?"Se connecter →":mode==="signup"?"Créer mon compte →":"Envoyer le lien →"}
         </button>
-        {mode==="login"&&<div style={{textAlign:"center",marginTop:14,color:C.textDim,fontSize:11}}>Démo : <span style={{color:C.textMid,fontWeight:600}}>Pseudo</span> / <span style={{color:C.textMid,fontWeight:600}}>testtest</span></div>}
       </div>
     </div>
   );
 }
 
-// ── Home ──────────────────────────────────────────────────────
 function HomeScreen({user,grandTotal,totalHands,onNewSession,onHistory,onStats,onLogout}){
   return (
     <div style={{minHeight:"100vh",fontFamily:FF,background:C.bg,display:"flex",flexDirection:"column",position:"relative",overflow:"hidden"}}>
@@ -2095,36 +2100,250 @@ function EditHandModal({hand,onSave,onDelete,onClose}){
 
 // ── App ───────────────────────────────────────────────────────
 export default function App(){
-  const [user,setUser]=useState(()=>{
-    try{return localStorage.getItem("pokerlog_user")||null;}catch{return null;}
-  });
+  const [user,setUser]=useState(null); // Supabase user object
   const [screen,setScreen]=useState("home");
-  const [sessions,setSessions]=useState(()=>{
-    try{const s=localStorage.getItem("pokerlog_sessions");return s?JSON.parse(s):[];}catch{return [];}
-  });
+  const [sessions,setSessions]=useState([]);
   const [activeSessionId,setActiveSessionId]=useState(null);
   const [shareHand,setShareHand]=useState(null);
   const [shareTable,setShareTable]=useState(false);
   const [showTableModal,setShowTableModal]=useState(false);
-  const [sessionOptions,setSessionOptions]=useState(null); // session id being edited
+  const [sessionOptions,setSessionOptions]=useState(null);
   const [tab,setTab]=useState("add");
   const [showEndSession,setShowEndSession]=useState(false);
   const [editHand,setEditHand]=useState(null);
+  const [loading,setLoading]=useState(true);
 
-  // Persist sessions to localStorage whenever they change
+  // ── Auth listener ─────────────────────────────────────────
   useEffect(()=>{
-    try{localStorage.setItem("pokerlog_sessions",JSON.stringify(sessions));}catch{}
-  },[sessions]);
+    // Check current session
+    supabase.auth.getSession().then(({data:{session}})=>{
+      setUser(session?.user||null);
+      setLoading(false);
+    });
+    // Listen for auth changes
+    const {data:{subscription}}=supabase.auth.onAuthStateChange((_,session)=>{
+      setUser(session?.user||null);
+      if(!session?.user) setSessions([]);
+    });
+    return ()=>subscription.unsubscribe();
+  },[]);
 
-  // Persist user
+  // ── Load sessions when user logs in ──────────────────────
   useEffect(()=>{
-    try{
-      if(user) localStorage.setItem("pokerlog_user",user);
-      else localStorage.removeItem("pokerlog_user");
-    }catch{}
+    if(!user) return;
+    loadSessions();
   },[user]);
 
-  if(!user) return <LoginScreen onLogin={name=>{setUser(name);setScreen("home");}}/>;
+  const loadSessions=async()=>{
+    const {data:sessionData}=await supabase.from("sessions").select("*").order("created_at",{ascending:false});
+    if(!sessionData) return;
+    // Load hands for each session
+    const {data:handsData}=await supabase.from("hands").select("*").order("ts",{ascending:false});
+    const sessionsWithHands=sessionData.map(s=>({
+      ...s,
+      // Map snake_case to camelCase
+      startTime:s.start_time,
+      startTs:s.start_ts,
+      endTime:s.end_time,
+      endTs:s.end_ts,
+      currentSb:s.current_sb,
+      currentBb:s.current_bb,
+      currentAnte:s.current_ante,
+      currentStack:s.current_stack,
+      startingStack:s.starting_stack,
+      playersPerTable:s.players_per_table,
+      paidPlaces:s.paid_places,
+      nbPlayers:s.nb_players,
+      sessionNote:s.session_note,
+      finalStack:s.final_stack,
+      itmGain:s.itm_gain,
+      tableSeats:s.table_seats||[],
+      hands:(handsData||[]).filter(h=>h.session_id===s.id).map(h=>({
+        ...h,
+        result:h.result,
+        stackAfter:h.stack_after,
+        finalStreet:h.final_street,
+        sessionName:h.session_name,
+        sessionType:h.session_type,
+        paidPlaces:h.paid_places,
+        nbPlayers:h.nb_players,
+      }))
+    }));
+    setSessions(sessionsWithHands);
+  };
+
+  if(loading) return (
+    <div style={{minHeight:"100vh",background:C.bg,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:FF}}>
+      <div style={{textAlign:"center"}}>
+        <EdgyLogo size={40}/>
+        <div style={{color:C.textDim,marginTop:16,fontSize:14}}>Chargement...</div>
+      </div>
+    </div>
+  );
+
+  if(!user) return <LoginScreen onLogin={()=>loadSessions()}/>;
+
+  // ── Data helpers ──────────────────────────────────────────
+  const sessionBankroll=s=>{
+    if(!s.closed) return null;
+    if(s.type==="cash") return s.hands.reduce((a,h)=>a+h.result,0);
+    if(s.itm&&s.itmGain!=null) return s.itmGain-parseFloat(s.buyin||0);
+    if(s.closed) return -(parseFloat(s.buyin||0));
+    return null;
+  };
+
+  const grandBankroll=sessions.reduce((t,s)=>{const b=sessionBankroll(s);return b!=null?t+b:t;},0);
+  const totalHands=sessions.reduce((t,s)=>t+s.hands.length,0);
+  const activeSession=sessions.find(s=>s.id===activeSessionId);
+  const hands=activeSession?.hands||[];
+  const sessionTotal=hands.reduce((a,h)=>a+h.result,0);
+
+  // ── CRUD ──────────────────────────────────────────────────
+  const handleSessionStart=async config=>{
+    const {data,error}=await supabase.from("sessions").insert([{
+      user_id:user.id,
+      name:config.name,
+      type:config.type,
+      start_time:config.startTime,
+      start_ts:config.startTs,
+      buyin:config.buyin,
+      currency:config.currency,
+      format:config.format,
+      starting_stack:config.startingStack,
+      current_stack:config.startingStack,
+      current_sb:config.currentSb,
+      current_bb:config.currentBb,
+      players_per_table:config.playersPerTable,
+      nb_players:config.nbPlayers,
+      cave:config.cave,
+      blinds:config.blinds,
+      table_seats:config.tableSeats||[],
+    }]).select().single();
+    if(error){console.error(error);return;}
+    const newSession={...data,...config,id:data.id,hands:[]};
+    setSessions(prev=>[newSession,...prev]);
+    setActiveSessionId(data.id);
+    setTab("add");
+    setScreen("session");
+  };
+
+  const addHand=async hand=>{
+    const {data,error}=await supabase.from("hands").insert([{
+      session_id:activeSessionId,
+      user_id:user.id,
+      ts:hand.ts,
+      card1:hand.card1,
+      card2:hand.card2,
+      board:hand.board,
+      position:hand.position,
+      nb_players:hand.nbPlayers,
+      villains:hand.villains,
+      sb:hand.sb,
+      bb:hand.bb,
+      ante:hand.ante,
+      remaining:hand.remaining,
+      paid_places:hand.paidPlaces,
+      result:hand.result,
+      stack_after:hand.stackAfter,
+      final_street:hand.finalStreet,
+      action:hand.action,
+      note:hand.note,
+      session_name:hand.sessionName,
+      session_type:hand.sessionType,
+    }]).select().single();
+    if(error){console.error(error);return;}
+    const newHand={...hand,id:data.id};
+    // Update currentStack in session
+    if(hand.stackAfter){
+      await supabase.from("sessions").update({current_stack:hand.stackAfter}).eq("id",activeSessionId);
+    }
+    setSessions(prev=>prev.map(s=>{
+      if(s.id!==activeSessionId) return s;
+      const updated={...s,hands:[newHand,...s.hands]};
+      if(hand.stackAfter) updated.currentStack=hand.stackAfter;
+      return updated;
+    }));
+    setTab("history");
+  };
+
+  const updateSession=async fields=>{
+    const dbFields={};
+    if(fields.currentSb!==undefined) dbFields.current_sb=fields.currentSb;
+    if(fields.currentBb!==undefined) dbFields.current_bb=fields.currentBb;
+    if(fields.currentAnte!==undefined) dbFields.current_ante=fields.currentAnte;
+    if(fields.currentStack!==undefined) dbFields.current_stack=fields.currentStack;
+    if(fields.playersPerTable!==undefined) dbFields.players_per_table=fields.playersPerTable;
+    if(fields.startingStack!==undefined) dbFields.starting_stack=fields.startingStack;
+    if(fields.registered!==undefined) dbFields.registered=fields.registered;
+    if(fields.remaining!==undefined) dbFields.remaining=fields.remaining;
+    if(fields.paidPlaces!==undefined) dbFields.paid_places=fields.paidPlaces;
+    if(fields.tableSeats!==undefined) dbFields.table_seats=fields.tableSeats;
+    if(Object.keys(dbFields).length>0){
+      await supabase.from("sessions").update(dbFields).eq("id",activeSessionId);
+    }
+    setSessions(prev=>prev.map(s=>s.id===activeSessionId?{...s,...fields}:s));
+  };
+
+  const endSession=async fields=>{
+    await supabase.from("sessions").update({
+      closed:true,
+      end_time:fields.endTime,
+      end_ts:fields.endTs,
+      session_note:fields.sessionNote,
+      final_stack:fields.finalStack,
+      placement:fields.placement,
+      itm:fields.itm,
+      itm_gain:fields.itmGain,
+    }).eq("id",activeSessionId);
+    setSessions(prev=>prev.map(s=>s.id===activeSessionId?{...s,...fields}:s));
+    setShowEndSession(false);
+    setScreen("history");
+  };
+
+  const saveEditedHand=async updated=>{
+    await supabase.from("hands").update({
+      result:updated.result,
+      stack_after:updated.stackAfter,
+      note:updated.note,
+      final_street:updated.finalStreet,
+      action:updated.action,
+    }).eq("id",updated.id);
+    setSessions(prev=>prev.map(s=>{
+      if(s.id!==activeSessionId) return s;
+      const newHands=s.hands.map(h=>h.id===updated.id?updated:h);
+      const latest=newHands[0];
+      const updatedSession={...s,hands:newHands};
+      if(latest?.stackAfter) updatedSession.currentStack=latest.stackAfter;
+      return updatedSession;
+    }));
+    setEditHand(null);
+  };
+
+  const deleteHand=async handId=>{
+    await supabase.from("hands").delete().eq("id",handId);
+    setSessions(prev=>prev.map(s=>s.id===activeSessionId?{...s,hands:s.hands.filter(h=>h.id!==handId)}:s));
+    setEditHand(null);
+  };
+
+  const deleteSession=async id=>{
+    await supabase.from("sessions").delete().eq("id",id);
+    setSessions(prev=>prev.filter(s=>s.id!==id));
+    if(activeSessionId===id) setActiveSessionId(null);
+  };
+
+  const renameSession=async(id,name)=>{
+    await supabase.from("sessions").update({name}).eq("id",id);
+    setSessions(prev=>prev.map(s=>s.id===id?{...s,name}:s));
+  };
+
+  const handleLogout=async()=>{
+    await supabase.auth.signOut();
+    setUser(null);
+    setSessions([]);
+    setScreen("home");
+  };
+
+  if(!user) return <LoginScreen onLogin={()=>loadSessions()}/>;;
 
   // Bankroll réelle (argent) par session
   const sessionBankroll=s=>{
@@ -2201,7 +2420,7 @@ export default function App(){
     setSessions(prev=>prev.map(s=>s.id===id?{...s,name}:s));
   };
 
-  if(screen==="home") return <HomeScreen user={user} grandTotal={grandBankroll} totalHands={totalHands} onNewSession={()=>setScreen("config")} onHistory={()=>setScreen("history")} onStats={()=>setScreen("stats")} onLogout={()=>{setUser(null);setScreen("home");}}/>;
+  if(screen==="home") return <HomeScreen user={user?.email?.split("@")[0]||"Joueur"} grandTotal={grandBankroll} totalHands={totalHands} onNewSession={()=>setScreen("config")} onHistory={()=>setScreen("history")} onStats={()=>setScreen("stats")} onLogout={handleLogout}/>;
 
   if(screen==="config") return <SessionConfig onStart={handleSessionStart} onBack={()=>setScreen("home")}/>;
 
