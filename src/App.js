@@ -87,7 +87,7 @@ const labelStyle = {
 function EdgyLogo({size=32,showText=true}){
   const id=Math.random().toString(36).slice(2,6);
   return (
-    <svg height={size} viewBox="-10 0 360 80" fill="none" xmlns="http://www.w3.org/2000/svg" style={{display:"block"}}>
+    <svg height={size} viewBox="-18 -5 380 92" fill="none" xmlns="http://www.w3.org/2000/svg" style={{display:"block"}}>
       <defs>
         <linearGradient id={`g${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#CC5500"/>
@@ -145,6 +145,7 @@ function EdgyIcon({size=40}){
 }
 function LoginScreen({onLogin}){
   const [mode,setMode]=useState("login");
+  const [pseudo,setPseudo]=useState("");
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const [confirmPw,setConfirmPw]=useState("");
@@ -153,7 +154,7 @@ function LoginScreen({onLogin}){
   const [shake,setShake]=useState(false);
   const [loading,setLoading]=useState(false);
   const triggerShake=()=>{setShake(true);setTimeout(()=>setShake(false),500);};
-  const resetMode=m=>{setMode(m);setError("");setSuccess("");setEmail("");setPassword("");setConfirmPw("");};
+  const resetMode=m=>{setMode(m);setError("");setSuccess("");setEmail("");setPassword("");setConfirmPw("");setPseudo("");};
   const handleSubmit=async()=>{
     setError("");setSuccess("");setLoading(true);
     try{
@@ -164,11 +165,15 @@ function LoginScreen({onLogin}){
         else{onLogin();}
       }
       if(mode==="signup"){
-        if(!email.trim()||!password||!confirmPw){setError("Remplis tous les champs");triggerShake();return;}
+        if(!pseudo.trim()||!email.trim()||!password||!confirmPw){setError("Remplis tous les champs");triggerShake();return;}
+        if(pseudo.trim().length<2){setError("Pseudo trop court (2 car. min)");triggerShake();return;}
         if(!/\S+@\S+\.\S+/.test(email)){setError("Email invalide");triggerShake();return;}
         if(password.length<6){setError("Mot de passe trop court (6 car. min)");triggerShake();return;}
         if(password!==confirmPw){setError("Les mots de passe ne correspondent pas");triggerShake();return;}
-        const {error:e}=await supabase.auth.signUp({email,password});
+        const {error:e}=await supabase.auth.signUp({
+          email,password,
+          options:{data:{pseudo:pseudo.trim()}}
+        });
         if(e){setError(e.message);triggerShake();}
         else{setSuccess("Compte créé ! Vérifie ton email pour confirmer.");}
       }
@@ -180,42 +185,61 @@ function LoginScreen({onLogin}){
       }
     }finally{setLoading(false);}
   };
-  const inp={...inputStyle};
+  const inp={...inputStyle,padding:"14px 16px",fontSize:16};
   return (
     <div style={{minHeight:"100vh",fontFamily:FF,background:C.bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"24px",position:"relative",overflow:"hidden"}}>
       <style>{`@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}@keyframes fadeup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}`}</style>
       <div style={{position:"absolute",top:"-20%",left:"50%",transform:"translateX(-50%)",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(255,136,0,0.07) 0%,transparent 70%)",pointerEvents:"none"}}/>
-      <div style={{marginBottom:36,animation:"fadeup .5s ease"}}><EdgyLogo size={44}/></div>
-      <div style={{width:"100%",maxWidth:380,background:C.bgCard,borderRadius:20,border:"1px solid rgba(255,255,255,0.06)",padding:"28px 24px",boxShadow:"0 32px 64px rgba(0,0,0,0.7)",animation:shake?"shake .4s ease":"fadeup .5s ease .1s both"}}>
-        <div style={{marginBottom:22}}>
-          <div style={{fontWeight:800,fontSize:20,color:C.text,marginBottom:3}}>{mode==="login"?"Content de te revoir 👋":mode==="signup"?"Crée ton compte":"Mot de passe oublié"}</div>
-          {mode==="login"&&<div style={{fontSize:12,color:C.textDim}}>Connecte-toi pour accéder à tes sessions</div>}
-        </div>
+
+      {/* Logo — centré, plus grand, plus haut */}
+      <div style={{marginBottom:40,animation:"fadeup .5s ease",display:"flex",justifyContent:"center"}}>
+        <EdgyLogo size={56}/>
+      </div>
+
+      <div style={{width:"100%",maxWidth:400,background:C.bgCard,borderRadius:24,border:"1px solid rgba(255,255,255,0.06)",padding:"32px 28px",boxShadow:"0 32px 64px rgba(0,0,0,0.7)",animation:shake?"shake .4s ease":"fadeup .5s ease .1s both"}}>
+
+        {/* Mode toggle */}
         {mode!=="forgot"&&(
-          <div style={{display:"flex",background:"rgba(255,255,255,0.04)",borderRadius:10,padding:3,marginBottom:20,gap:3}}>
+          <div style={{display:"flex",background:"rgba(255,255,255,0.04)",borderRadius:12,padding:4,marginBottom:28,gap:3}}>
             {[["login","Connexion"],["signup","Inscription"]].map(([m,l])=>(
-              <button key={m} onClick={()=>resetMode(m)} style={{flex:1,padding:"9px 0",borderRadius:8,border:mode===m?"1px solid rgba(255,215,0,0.2)":"1px solid transparent",background:mode===m?"rgba(255,136,0,0.12)":"transparent",color:mode===m?"#FFD700":C.textDim,fontWeight:700,fontSize:13,cursor:"pointer",fontFamily:FF,transition:"all .15s"}}>{l}</button>
+              <button key={m} onClick={()=>resetMode(m)} style={{
+                flex:1,padding:"12px 0",borderRadius:9,
+                border:mode===m?"1px solid rgba(255,215,0,0.2)":"1px solid transparent",
+                background:mode===m?"rgba(255,136,0,0.12)":"transparent",
+                color:mode===m?"#FFD700":C.textDim,
+                fontWeight:800,fontSize:17,cursor:"pointer",fontFamily:FF,transition:"all .15s"
+              }}>{l}</button>
             ))}
           </div>
         )}
-        {mode==="forgot"&&<button onClick={()=>resetMode("login")} style={{background:"none",border:"none",color:C.orange,fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:18,padding:0,fontFamily:FF}}>← Retour</button>}
-        <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
+        {mode==="forgot"&&<button onClick={()=>resetMode("login")} style={{background:"none",border:"none",color:C.orange,fontSize:15,fontWeight:600,cursor:"pointer",marginBottom:20,padding:0,fontFamily:FF}}>← Retour</button>}
+
+        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:20}}>
           {mode==="login"&&<>
             <input style={inp} type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Email"/>
             <input style={inp} type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Mot de passe"/>
-            <div style={{textAlign:"right",marginTop:2}}><button onClick={()=>resetMode("forgot")} style={{background:"none",border:"none",color:C.textDim,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:FF}}>Mot de passe oublié ?</button></div>
+            <div style={{textAlign:"right"}}><button onClick={()=>resetMode("forgot")} style={{background:"none",border:"none",color:C.textDim,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:FF}}>Mot de passe oublié ?</button></div>
           </>}
           {mode==="signup"&&<>
+            <input style={inp} value={pseudo} onChange={e=>setPseudo(e.target.value)} placeholder="Pseudo (ton nom en jeu)"/>
             <input style={inp} type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email"/>
             <input style={inp} type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Mot de passe (6 car. min)"/>
             <input style={inp} type="password" value={confirmPw} onChange={e=>setConfirmPw(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Confirmer le mot de passe"/>
           </>}
           {mode==="forgot"&&<input style={inp} type="email" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleSubmit()} placeholder="Ton adresse email"/>}
         </div>
-        {error&&<div style={{background:"rgba(255,61,61,0.1)",border:"1px solid rgba(255,61,61,0.2)",borderRadius:8,padding:"10px 14px",color:"#FF6B6B",fontSize:13,fontWeight:600,marginBottom:14}}>{error}</div>}
-        {success&&<div style={{background:"rgba(0,230,118,0.1)",border:"1px solid rgba(0,230,118,0.2)",borderRadius:8,padding:"10px 14px",color:C.win,fontSize:13,fontWeight:600,marginBottom:14}}>{success}</div>}
-        <button onClick={handleSubmit} disabled={loading} style={{width:"100%",padding:"14px 0",background:loading?"rgba(255,136,0,0.5)":C.grad,border:"none",borderRadius:10,color:"#0A0A0A",fontSize:15,fontWeight:800,cursor:loading?"not-allowed":"pointer",fontFamily:FF,letterSpacing:.3}}>
-          {loading?"...":mode==="login"?"Se connecter →":mode==="signup"?"Créer mon compte →":"Envoyer le lien →"}
+
+        {error&&<div style={{background:"rgba(255,61,61,0.1)",border:"1px solid rgba(255,61,61,0.2)",borderRadius:10,padding:"12px 16px",color:"#FF6B6B",fontSize:14,fontWeight:600,marginBottom:16}}>{error}</div>}
+        {success&&<div style={{background:"rgba(0,230,118,0.1)",border:"1px solid rgba(0,230,118,0.2)",borderRadius:10,padding:"12px 16px",color:C.win,fontSize:14,fontWeight:600,marginBottom:16}}>{success}</div>}
+
+        <button onClick={handleSubmit} disabled={loading} style={{
+          width:"100%",padding:"18px 0",
+          background:loading?"rgba(255,136,0,0.5)":C.grad,
+          border:"none",borderRadius:12,color:"#0A0A0A",
+          fontSize:18,fontWeight:900,cursor:loading?"not-allowed":"pointer",
+          fontFamily:FF,letterSpacing:.3
+        }}>
+          {loading?"...":(mode==="login"?"Se connecter →":mode==="signup"?"Créer mon compte →":"Envoyer le lien →")}
         </button>
       </div>
     </div>
@@ -2346,7 +2370,7 @@ export default function App(){
   if(!user) return <LoginScreen onLogin={()=>loadSessions()}/>;
 
 
-  if(screen==="home") return <HomeScreen user={user?.email?.split("@")[0]||"Joueur"} grandTotal={grandBankroll} totalHands={totalHands} onNewSession={()=>setScreen("config")} onHistory={()=>setScreen("history")} onStats={()=>setScreen("stats")} onLogout={handleLogout}/>;
+  if(screen==="home") return <HomeScreen user={user?.user_metadata?.pseudo||user?.email?.split("@")[0]||"Joueur"} grandTotal={grandBankroll} totalHands={totalHands} onNewSession={()=>setScreen("config")} onHistory={()=>setScreen("history")} onStats={()=>setScreen("stats")} onLogout={handleLogout}/>;
 
   if(screen==="config") return <SessionConfig onStart={handleSessionStart} onBack={()=>setScreen("home")}/>;
 
